@@ -1,0 +1,211 @@
+<?
+namespace data;
+use \Iterator;
+
+/*
+ * Keep track of holidays
+ * http://www.lovdata.no/all/hl-19950224-012.html#2
+ */
+final class Holidays
+{
+    const NOTHING = 0;
+    const ELECTION = 1;
+    const OTHER = 2;
+    const EVE = 3;
+    const HOLIDAY = 4;
+
+    private $election_date;
+    private $election_type;
+    private $other;
+    private $eves;
+    private $holidays;
+    private $aggregated = null;
+
+    private static $years = array();
+    private static $elections = null;
+
+    private function __construct($year)
+    {
+        $easter = easter_date($year);
+
+        $this->holidays = array(
+            mktime(0, 0, 0, 1, 1, $year)        => '1. nyttårsdag',
+            strtotime('-7 days', $easter)       => 'Palmesøndag',
+            strtotime('-3 days', $easter)       => 'Skjærtorsdag',
+            strtotime('-2 days', $easter)       => 'Langfredag',
+            $easter                             => '1. påskedag',
+            strtotime('+1 day', $easter)        => '2. påskedag',
+            strtotime('+49 days', $easter)      => '1. pinsedag',
+            strtotime('+50 days', $easter)      => '2. pinsedag', 
+            mktime(0, 0, 0, 12, 25, $year)      => '1. juledag',
+            mktime(0, 0, 0, 12, 26, $year)      => '2. juledag'
+        );
+
+        $this->eves = array(
+            strtotime('-1 day', $easter)        => 'Påskeaften',
+            strtotime('+48 days', $easter)      => 'Pinseaften',
+            mktime(0, 0, 0, 12, 24, $year)      => 'Julaften',
+            mktime(0, 0, 0, 12, 31, $year)      => 'Nyttårsaften'
+        );
+
+        $this->other = array(
+            mktime(0, 0, 0, 5, 1, $year)        => 'Arbeidernes internasjonale kampdag',
+            mktime(0, 0, 0, 5, 17, $year)       => 'Grunnlovsdag',
+            strtotime('+39 days', $easter)      => 'Kristi himmelfartsdag'
+        );
+
+        $this->election_date = $this->election_type = null;
+        foreach (self::$elections as $date => $type)
+        {
+            if (date('Y', $date) == $year)
+            {
+                $this->election_date = $date;
+                $this->election_type = $type;
+                break; // Maximum one election per year
+            }
+        }
+    }
+
+    // Creating dates from strtotime is heavy but convenient
+    // Our trade-off is to do it as seldom as possible
+    public static function getFromCache($year)
+    {
+        // Parse election dates from file
+        if (self::$elections == null)
+        {
+            self::$elections = array();
+
+            if (is_file('election.txt') && is_readable('election.txt') && ($handle = @fopen('election.txt', 'r')))
+            {
+                while (($line = fgets($handle, 13)) !== false)
+                {
+                    if (preg_match('((\\d{4})-(\\d{2})-(\\d{2}) (\\d{1}))', $line, $match))
+                    {
+                        self::$elections[mktime(0, 0, 0, $match[2], $match[3], $match[1])] = $match[4] == 1 ? 'Stortingsvalg' : 'Fylkesting- og kommunevalg';
+                    }
+                }
+                fclose($handle);
+            }
+        }
+
+        // Instantiate or load old instance
+        if (!array_key_exists($year, self::$years))
+        {
+            self::$years[$year] = new self($year);
+        }
+
+        return self::$years[$year];
+    }
+
+    public function getDateInfo($date)
+    {
+        if (array_key_exists($date, $this->holidays))
+        {
+            return $this->holidays[$date];
+        }
+
+        if (array_key_exists($date, $this->eves))
+        {
+            return $this->eves[$date];
+        }
+
+        if (array_key_exists($date, $this->other))
+        {
+            return $this->other[$date];
+        }
+
+        if ($date != null && $date == $this->election_date)
+        {
+            return $this->election_type;
+        }
+
+        return null;
+    }
+
+    public function getDateType($date)
+    {
+        if (array_key_exists($date, $this->holidays))
+        {
+            return self::HOLIDAY;
+        }
+
+        if (array_key_exists($date, $this->eves))
+        {
+            return self::EVE;
+        }
+
+        if (array_key_exists($date, $this->other))
+        {
+            return self::OTHER;
+        }
+
+        if ($date != null && $date == $this->election_date)
+        {
+            return self::ELECTION;
+        }
+
+        return self::NOTHING;
+    }
+
+    public function getIterator()
+    {
+        if ($this->aggregated == null)
+        {
+            $this->aggregated = $this->holidays + $this->eves + $this->other;
+            if ($this->election_date != null)
+            {
+                $this->aggregated += array($this->election_date => $this->election_type);
+            }
+            ksort($this->aggregated);
+        }
+
+        return new HolidaysIterator($this->aggregated);
+    }
+}
+
+final class HolidaysIterator implements Iterator
+{
+    private $aggregated;
+    private $keys;
+    private $current;
+    private $count;
+
+    public function __construct(&$holidays)
+    {
+        $this->aggregated = &$holidays;
+        $this->keys = array_keys($this->aggregated);
+        $this->count = count($this->aggregated);
+    }
+
+    public function rewind()
+    {
+        $this->current = 0;
+    }
+
+    public function current()
+    {
+        return $this->aggregated[$this->keys[$this->current]];
+    }
+
+    public function key()
+    {
+        if ($this->current < $this->count)
+        {
+            return $this->keys[$this->current];
+        }
+
+        return null;
+    }
+
+    public function next()
+    {
+        ++$this->current;
+    }
+
+    public function valid()
+    {
+        return $this->current < $this->count;
+    }
+}
+
+?>

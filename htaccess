@@ -1,0 +1,86 @@
+#Options -FollowSymLinks -Indexes -ExecCGI
+RewriteEngine on
+RewriteBase /jonassm/i-tide/
+
+# Redirect from folk.uio.no to heim.ifi.uio.no
+RewriteCond %{HTTP_HOST} !^heim\.ifi\.uio\.no
+RewriteRule ^(.*)$ http://heim.ifi.uio.no/jonassm/i-tide/$1 [R=301,NC,L]
+
+# Only allow GET requests with accept JSON, XML or plain text
+# FIXME: This only applies for /rest endpoints, redo somehow
+RewriteCond %{REQUEST_METHOD} !^(GET) [NC]
+RewriteRule .* - [R=405,L]
+RewriteCond %{HTTP:Accept} !(application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
+RewriteRule .* - [R=406,L]
+
+# Stop rewrite loops
+RewriteRule ^redirect:/ - [R=404,L]
+RewriteCond %{ENV:REDIRECT_STATUS} 200
+RewriteRule .* - [L]
+
+# Prevent direct access except for phps
+RewriteRule (.*phps)$ $1 [L]
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule .* - [R=404,L]
+
+### BEGIN ROUTES ###
+
+# /res/holidays
+RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
+RewriteRule ^res/holidays/([0-9]{4})(\.(txt|xml|json))?/?$ rest.php?ctrl=holidays&type=%1&view=$3&year=$1 [L,NC,QSA]
+
+RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
+RewriteRule ^res/holidays(\.(txt|xml|json))?/?$ rest.php?ctrl=holidays&type=%1&view=$2&year=0 [L,NC,QSA]
+
+# /res/hours
+RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
+RewriteRule ^res/hours/([0-9]{4})[\-/]([0-9]{1,2})[\-/]([0-9]{1,2})(\.(txt|xml|json))?/?$ rest.php?ctrl=hours&type=%1&view=$5&year=$1&month=$2&day=$3 [L,NC,QSA]
+
+RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
+RewriteRule ^res/hours/([0-9]{4})/(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|ag|sep|oct|nov|dec)/([0-9]{1,2})(\.(txt|xml|json))?/?$ rest.php?ctrl=hours&type=%1&view=$5&year=$1&month=$2&day=$3 [L,NC,QSA]
+
+# /res/status
+RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
+RewriteRule ^res/status(\.(txt|xml|json))?/?$ rest.php?ctrl=status&type=%1&view=$2 [L,NC,QSA]
+
+# /res/month
+RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
+RewriteRule ^res/month(\.(txt|xml|json))?/?$ rest.php?ctrl=month&type=%1&view=$2&year=0&month=0 [L,NC,QSA]
+
+RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
+RewriteRule ^res/month/([0-9]{4})/([0-9]{1,2}|january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)(\.(txt|xml|json))?/?$ rest.php?ctrl=month&type=%1&view=$4&year=$1&month=$2 [L,NC,QSA]
+
+RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
+RewriteRule ^res/month/([0-9]{4})-([0-9]{1,2})(\.(txt|xml|json))?/?$ rest.php?ctrl=month&type=%1&view=$4&year=$1&month=$2 [L,NC,QSA]
+
+RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
+RewriteRule ^rest/month/([0-9]{1,2}|january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)(\.(txt|xml|json))?/?$ rest.php?ctrl=month&type=%1&view=$3&year=0&month=$1 [L,NC,QSA]
+
+# TODO: week (no arg=this week)
+# TODO: non-rest endpoints
+
+# /res/resources
+RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
+RewriteRule ^res/resources(\.(txt|xml|json))?/?$ rest.php?ctrl=resources&type=%1&view=$2 [L,NC,QSA]
+RewriteRule ^res/$ /jonassm/i-tide/res/resources [R=301,L,NC]
+
+# Short form of hours, redirect to hours
+RewriteRule ^(today|tomorrow)(.*)$ /jonassm/i-tide/res/hours/$1$2 [R=301,L,NC]
+RewriteRule ^res/([0-9]{4})-([01][0-9])-([0-3][0-9])(.*)$ /jonassm/i-tide/res/hours/$1-$2-$3$4 [R=301,L,NC]
+
+RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
+RewriteRule ^res/hours(\.(txt|xml|json))?/?$ rest.php?ctrl=hours&type=%1&view=$2&year=0&month=0&day=&0&override=today [L,NC,QSA]
+
+RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
+RewriteRule ^res/hours/(today|tomorrow)(\.(txt|xml|json))?/?$ rest.php?ctrl=hours&type=%1&view=$3&year=0&month=0&day=0&override=$1 [L,NC,QSA]
+
+### END ROUTES ###
+
+RewriteRule .* - [R=404,L]
+
+# Set HTTP response headers
+SetEnv nokeepalive
+AddDefaultCharset UTF-8
+ExpiresActive on
+#ExpiresDefault "access plus 1 year"
+#Header set Cache-Control "max=age=2592000"
