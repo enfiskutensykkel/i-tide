@@ -166,7 +166,7 @@ final class Hours
         if ($this->today <= $timestamp && $timestamp < $this->tomorrow)
         {
             $hours = $this->getBeerHours();
-            if ($hours != null && $timestamp < $hours->close)
+            if ($hours != null && $hours->open <= $timestamp && $timestamp < $hours->close)
             {
                 return $hours->close - 3600 - $timestamp;
             }
@@ -182,7 +182,7 @@ final class Hours
         if ($this->today <= $timestamp && $timestamp < $this->tomorrow)
         {
             $hours = $this->getWineHours();
-            if ($hours != null && $timestamp < $hours->close)
+            if ($hours != null && $hours->open <= $timestamp && $timestamp < $hours->close)
             {
                 return $hours->close - 3600 - $timestamp;
             }
