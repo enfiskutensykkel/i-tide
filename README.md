@@ -21,11 +21,18 @@ The application is running here: http://heim.ifi.uio.no/jonassm/i-tide/
 Please note that it isn't quite finished yet, as seen in the following
 TODO list:
  - [x] REST-like back-end
-   - [x] Status end-point
-   - [x] Sales hours end-point
-   - [x] Holidays list end-point
-   - [x] Month end-point
-   - [ ] Week end-point
+   - [x] Status view (`/res/status`)
+   - [ ] Time left (`/res/timeleft`)
+   - [x] Sales hours (`/res/hours/[YYYY-MM-DD|today|tomorrow]`)
+   - [x] Holidays list (`/res/holidays/[YYYY]`)
+   - [x] Month view (`/res/month/[YYYY-MM]`)
+   - [ ] Week view (`/res/week/[YYYY-<weeknumber>]`)
+   - [ ] Upcoming (`/res/upcoming/[YYYY-MM-DD|today|tomorrow]`)
+   - [x] API descriptor view (`/res/resources`)
+ - [ ] Calendar UI (front-end)
+   - [ ] Bootstrap CSS
+   - [ ] Responsive design
+   - [ ] JavaScript AJAX
  - [ ] Error handling
    - [ ] Debug output
    - [ ] Client feedback
@@ -34,10 +41,6 @@ TODO list:
    - [ ] Dynamic configuration of routes
    - [ ] Symbolic link creation
    - [ ] `.htaccess` generation
- - [ ] Calendar UI (front-end)
-   - [ ] Bootstrap CSS
-   - [ ] Responsive CSS
-   - [ ] JavaScript AJAX
  - [ ] Security testing
    - [ ] Direct file access
    - [ ] Request injection
