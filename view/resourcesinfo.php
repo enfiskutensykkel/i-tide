@@ -15,7 +15,7 @@ final class ResourcesInfo extends View
                     'uri' => $resource->createResourceUri('ctrl\Status')
                 ),
                 (object) array(
-                    'type' => "openinghours",
+                    'type' => "saleshours",
                     'uri' => $resource->createResourceUri('ctrl\Hours')
                 ),
                 (object) array(

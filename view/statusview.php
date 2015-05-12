@@ -45,7 +45,7 @@ final class StatusView extends View
                 'time' => $this->time,
                 'beer' => $this->beer,
                 'wine' => $this->wine,
-                'openinghours' => $view->asJson($resource)->openinghours,
+                'saleshours' => $view->asJson($resource)->saleshours,
                 'note' => $note
             )
         );

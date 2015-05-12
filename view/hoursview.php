@@ -19,7 +19,7 @@ final class HoursView extends View
     public function asXml(Controller $resource = null)
     {
         $xml = new DOMDocument;
-        $node = $xml->createElement("openinghours");
+        $node = $xml->createElement("saleshours");
         $node->setAttribute("version", VERSION);
         $node->setAttribute("uri", $resource->getResourceUri($this->view->getDate()));
 
@@ -38,7 +38,7 @@ final class HoursView extends View
     {
         return (object) array(
             'version' => VERSION,
-            'openinghours' => (object) array(
+            'saleshours' => (object) array(
                 'current' => $this->view->asJson(),
                 'next' => $this->next->asJson()
             )

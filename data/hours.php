@@ -3,7 +3,7 @@ namespace data;
 use data\Holidays;
 
 /* 
- * Keep track of opening hours
+ * Keep track of sales hours
  * http://www.lovdata.no/all/tl-19890602-027-006.html
  */
 final class Hours
@@ -59,7 +59,7 @@ final class Hours
         }
         else
         {
-            // Normal opening hours
+            // Normal sales hours
             return (object) array(
                 'open' => $this->today + 10 * 3600,
                 'close' => $this->today + 18 * 3600
@@ -92,7 +92,7 @@ final class Hours
         }
         else
         {
-            // Normal opening hours
+            // Normal sales hours
             return (object) array(
                 'open' => $this->today + 9 * 3600,
                 'close' => $this->today + 20 * 3600
