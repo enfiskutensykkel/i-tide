@@ -19,9 +19,9 @@ RewriteCond %{ENV:REDIRECT_STATUS} 200
 RewriteRule .* - [L]
 
 # Prevent direct access except for phps
-RewriteRule (.*phps)$ $1 [L]
-RewriteCond %{REQUEST_FILENAME} -f
-RewriteRule .* - [R=404,L]
+##RewriteRule (.*\.phps) $1 [R=200,L]
+#RewriteCond %{REQUEST_FILENAME} -f
+#RewriteRule .* - [R=404,L]
 
 ### BEGIN ROUTES ###
 
