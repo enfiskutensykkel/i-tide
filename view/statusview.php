@@ -15,16 +15,11 @@ final class StatusView extends View
 
     public function __construct($timestamp, $hours)
     {
-        $this->time = date("H:i:s", $timestamp);
-        $this->date = date("Y-m-d", $timestamp);
+        $this->time = DateInfo::formatTime($timestamp);
+        $this->date = DateInfo::formatDate($timestamp);
         $this->data = $hours;
-
-        $beer = $hours->getBeerHours();
-        $wine = $hours->getWineHours();
-
-        $this->beer = $beer != null && $beer->open <= $timestamp && $timestamp < $beer->close;
-        $this->wine = $wine != null && $wine->open <= $timestamp && $timestamp < $wine->close;
-
+        $this->beer = $hours->getRemainingBeerTime($timestamp);
+        $this->wine = $hours->getRemainingWineTime($timestamp);
         $this->note = $hours->getUpcomingEvent();
     }
 
@@ -37,14 +32,44 @@ final class StatusView extends View
         }
         $view = new HoursView($this->data);
 
+        if ($this->beer != 0)
+        {
+            $beer = (object) array(
+                'timeleft' => true,
+                'remaining' => DateInfo::formatTime($this->beer)
+            );
+        }
+        else
+        {
+            $beer = (object) array(
+                'timeleft' => false,
+                'remaining' => null
+            );
+        }
+
+        if ($this->wine != 0)
+        {
+            $wine = (object) array(
+                'timeleft' => true,
+                'remaining' => DateInfo::formatTime($this->wine)
+            );
+        }
+        else
+        {
+            $wine = (object) array(
+                'timeleft' => false,
+                'remaining' => null
+            );
+        }
+
         return (object) array(
             'version' => VERSION,
             'status' => (object) array(
                 'uri' => $resource->getResourceUri(),
                 'date' => $this->date,
                 'time' => $this->time,
-                'beer' => $this->beer,
-                'wine' => $this->wine,
+                'beer' => $beer,
+                'wine' => $wine,
                 'saleshours' => $view->asJson($resource)->saleshours,
                 'note' => $note
             )
@@ -60,8 +85,30 @@ final class StatusView extends View
 
         $xml->appendChild($doc->createElement("date", $this->date));
         $xml->appendChild($doc->createElement("time", $this->time));
-        $xml->appendChild($doc->createElement("beer", $this->beer ? "open" : "closed"));
-        $xml->appendChild($doc->createElement("wine", $this->wine ? "open" : "closed"));
+
+        $beer = $doc->createElement("beer");
+        if ($this->beer != 0)
+        {
+            $beer->setAttribute("timeleft", "true");
+            $beer->appendChild($doc->createTextNode(DateInfo::formatTime($this->beer)));
+        }
+        else
+        {
+            $beer->setAttribute("timeleft", "false");
+        }
+        $xml->appendChild($beer);
+
+        $wine = $doc->createElement("wine");
+        if ($this->wine != 0)
+        {
+            $wine->setAttribute("timeleft", "true");
+            $wine->appendChild($doc->createTextNode(DateInfo::formatTime($this->wine)));
+        }
+        else
+        {
+            $wine->setAttribute("timeleft", "false");
+        }
+        $xml->appendChild($wine);
 
         $view = new HoursView($this->data);
         $xml->appendChild($doc->importNode($view->asXml($resource), true));
@@ -76,25 +123,30 @@ final class StatusView extends View
         return $xml;
     }
 
+    private static function formatts($ts)
+    {
+        return intval(date("H", $ts))."t ".intval(date("i", $ts))."m";
+    }
+
     public function asText()
     {
-        $beer = $this->beer ? "åpent" : "stengt";
-        $wine = $this->wine ? "åpent" : "stengt";
+        $beer = $this->beer != null ? self::formatts($this->beer) : "stengt";
+        $wine = $this->wine != null ? self::formatts($this->wine) : "stengt";
 
-        $possible = $this->data->getNextPossible();
         $curr = "I dag: " . DateInfo::withHours($this->data)->asText();
-        $next = "Neste: " . DateInfo::withHours($possible)->asText();
+        $next = "Neste: " . DateInfo::withHours($this->data->getNextPossible())->asText();
         $info = $this->note != null ? \WEEKDAY($this->note->getDate()) . " er " . $this->note->getDateInfo() : "";
-        $status = "Tid: $this->time   Ølutsalg: $beer   Vinmonopol: $wine\n";
-
+        $status = "Ølutsalg: $beer\nVinmonopol: $wine\n";
+  
         $len = max(
-            mb_strlen($status, $this->getCharSet()), 
             mb_strlen($curr, $this->getCharSet()), 
             mb_strlen($next, $this->getCharSet()), 
             mb_strlen($info, $this->getCharSet())
         );
 
-        $text = $status."\n";
+        $date = $this->data->getDate();
+        $text = \WEEKDAY($date).", ".date("j", $date).". ".strtolower(\MONTHNAME(date('m',$date)))." ".date('Y',$date).", kl. $this->time\n";
+        $text .= $status."\n";
         $text .= "Utsalgstider for øl og vinmonopol\n";
         $text .= str_repeat("=", $len)."\n";
         $text .= $curr;

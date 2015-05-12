@@ -50,7 +50,8 @@ final class DateInfo extends View
         return date(self::DATE_FORMAT, $this->date);
     }
 
-    public static function withHours(&$hours)
+    //public static function withHours(&$hours)
+    public static function withHours($hours)
     {
         $view = new self($hours->getDate());
         $view->info = $hours->getDateInfo();
@@ -196,9 +197,8 @@ final class DateInfo extends View
         {
             $node .= " ".$this->info;
         }
-        $node .= "\n";
 
-        return $node;
+        return trim($node)."\n";
     }
 }
 

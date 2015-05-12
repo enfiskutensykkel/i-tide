@@ -22,7 +22,7 @@ Please note that it isn't quite finished yet, as seen in the following
 TODO list:
  - [x] REST-like back-end
    - [x] Status view (`/res/status`)
-   - [ ] Time left (`/res/timeleft`)
+   - [ ] ~~Time left (`/res/timeleft`)~~ Included in status.
    - [x] Sales hours (`/res/hours/[YYYY-MM-DD|today|tomorrow]`)
    - [x] Holidays list (`/res/holidays/[YYYY]`)
    - [x] Month view (`/res/month/[YYYY-MM]`)

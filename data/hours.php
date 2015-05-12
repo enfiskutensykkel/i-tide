@@ -160,6 +160,38 @@ final class Hours
 
         return null;
     }
+
+    public function getRemainingBeerTime($timestamp)
+    {
+        if ($this->today <= $timestamp && $timestamp < $this->tomorrow)
+        {
+            $hours = $this->getBeerHours();
+            if ($hours != null && $timestamp < $hours->close)
+            {
+                return $hours->close - 3600 - $timestamp;
+            }
+
+            return 0;
+        }
+
+        return -1;
+    }
+
+    public function getRemainingWineTime($timestamp)
+    {
+        if ($this->today <= $timestamp && $timestamp < $this->tomorrow)
+        {
+            $hours = $this->getWineHours();
+            if ($hours != null && $timestamp < $hours->close)
+            {
+                return $hours->close - 3600 - $timestamp;
+            }
+
+            return 0;
+        }
+
+        return -1;
+    }
 }
 
 ?>
