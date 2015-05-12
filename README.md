@@ -12,7 +12,36 @@ and since I wanted to to a micro web framework in PHP for fun, I made this new
 RESTy back-end. It's a overkill for something as simple, but it is a fun toy
 project as I don't get a lot of time to do web development any more. 
 
-The name "_i tide_" is Norwegian for "_in time_".
+The name _i tide_ is Norwegian for _in time_.
+
+Current status
+--------------
+The application is running here: http://heim.ifi.uio.no/jonassm/i-tide/
+
+Please note that it isn't quite finished yet, as seen in the following
+TODO list:
+ - [x] REST-like back-end
+   - [x] Status end-point
+   - [x] Sales hours end-point
+   - [x] Holidays list end-point
+   - [x] Month end-point
+   - [ ] Week end-point
+ - [ ] Error handling
+   - [ ] Debug output
+   - [ ] Client feedback
+   - [ ] Error logging
+ - [ ] Flexible deployment script
+   - [ ] Dynamic configuration of routes
+   - [ ] Symbolic link creation
+   - [ ] `.htaccess` generation
+ - [ ] Calendar UI (front-end)
+   - [ ] Bootstrap CSS
+   - [ ] Responsive CSS
+   - [ ] JavaScript AJAX
+ - [ ] Security testing
+   - [ ] Direct file access
+   - [ ] Request injection
+
 
 Calendar UI
 -----------
@@ -25,7 +54,7 @@ quite work on small screens such as mobile phones.
 
 RESTy API
 ---------
-I've implemented a REST-like (hence _RESTy_) API for this version. Seeing how
+I've implemented a REST-like (hence "REST**y**") API for this version. Seeing how
 it's all date manipulation, it is really an overkill, but it is convenient if
 you want to make a small script and can't be bothered with doing the logic
 yourself. As the functionality is specific to Norwegian rules for sales hours,
@@ -45,6 +74,9 @@ header to one of the following: `application/xml`, `application/json`,
 by concatenating a `.xml`, `.json` or `.txt` to the end-points, something which
 is convenient for debugging in a browser.
 Note that the plain text format isn't really intended for parsing.
+
+I will document the RESTy API at a later point when the application is more
+complete.
 
 Micro framework
 ---------------
@@ -87,4 +119,11 @@ types in a view and have multiple views for a resource.
 I used PHP namespaces for this framework, but it proved to be more of an
 hassle than a benefit really.
 
-
+Deployment
+----------
+I've written this specifically for the environment I'm hosted on, so I
+imagine getting it to work on your own web server might take some work.
+Feel free to ask me if you need information about web server configuration.
+modi\_php configuration and so on, and I'll try to answer them. It's not my
+personal server, but hosted on the university's servers, so that's why my 
+choices were limited.
