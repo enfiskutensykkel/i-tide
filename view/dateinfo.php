@@ -40,9 +40,9 @@ final class DateInfo extends View
         );
     }
 
-    private function getUri()
+    private function getUrl()
     {
-        return Hours::createResourceUri('ctrl\Hours', date(self::DATE_FORMAT, $this->date));
+        return Hours::createResourceUrl('ctrl\Hours', date(self::DATE_FORMAT, $this->date));
     }
 
     public function getDate()
@@ -77,12 +77,12 @@ final class DateInfo extends View
         return $view;
     }
 
-    public function asXml()
+    public function asXml(ResourceInfo &$resource)
     {
         $xml = new DOMDocument;
         $node = $xml->createElement("dateinfo");
 
-        $node->setAttribute("uri", $this->getUri());
+        $node->setAttribute("url", $this->getUrl());
         $date = date(self::DATE_FORMAT, $this->date);
         $node->appendChild($xml->createElement("date", $date));
 
@@ -119,11 +119,11 @@ final class DateInfo extends View
         return $node;
     }
 
-    public function asJson()
+    public function asJson(ResourceInfo &$resource)
     {
         $date = date(self::DATE_FORMAT, $this->date);
         $node = array(
-            'uri' => $this->getUri(),
+            'url' => $this->getUrl(),
             'date' => $date
         );
 
@@ -162,12 +162,12 @@ final class DateInfo extends View
         );
     }
 
-    public function asText()
+    public function asText(ResourceInfo &$resource)
     {
         $date = date(self::DATE_FORMAT, $this->date);
         $node = "$date ";
         $weekday = \WEEKDAY($this->date);
-        $pad = 8 - mb_strlen($weekday, $this->getCharSet());
+        $pad = 8 - mb_strlen($weekday);
         $node .= $weekday . str_repeat(" ", $pad);
 
         if ($this->show_hours)

@@ -1,6 +1,5 @@
 <?
 namespace view;
-use ctrl\Controller;
 use view\DateInfo;
 use \DOMDocument;
 
@@ -16,43 +15,44 @@ final class HoursView extends View
         $this->next = DateInfo::withHours($next);
     }
 
-    public function asXml(Controller $resource = null)
+    public function asXml(ResourceInfo &$res)
     {
         $xml = new DOMDocument;
         $node = $xml->createElement("saleshours");
         $node->setAttribute("version", VERSION);
-        $node->setAttribute("uri", $resource->getResourceUri($this->view->getDate()));
+        $node->setAttribute("url", $res->resource->getResourceUrl($this->view->getDate()));
 
         $curr = $xml->createElement("current");
-        $curr->appendChild($xml->importNode($this->view->asXml(), true));
+        $curr->appendChild($xml->importNode($this->view->asXml($res), true));
         $node->appendChild($curr);
 
         $next = $xml->createElement("next");
-        $next->appendChild($xml->importNode($this->next->asXml(), true));
+        $next->appendChild($xml->importNode($this->next->asXml($res), true));
         $node->appendChild($next);
 
         return $node;
     }
 
-    public function asJson(Controller $resource = null)
+    public function asJson(ResourceInfo &$res)
     {
         return (object) array(
             'version' => VERSION,
+            'url' => $res->resource->getResourceUrl($this->view->getDate()),
             'saleshours' => (object) array(
-                'current' => $this->view->asJson(),
-                'next' => $this->next->asJson()
+                'current' => $this->view->asJson($res),
+                'next' => $this->next->asJson($res)
             )
         );
     }
 
-    public function asText()
+    public function asText(ResourceInfo &$res)
     {
-        $line_curr = "I dag: ".$this->view->asText();
-        $line_next = "Neste: ".$this->next->asText();
+        $line_curr = "I dag: ".$this->view->asText($res);
+        $line_next = "Neste: ".$this->next->asText($res);
 
         $len = max(
-            mb_strlen($line_curr, $this->getCharSet()),
-            mb_strlen($line_next, $this->getCharSet())
+            mb_strlen($line_curr),
+            mb_strlen($line_next)
         );
 
         $text = "Utsalgstider for øl og vinmonopol\n";

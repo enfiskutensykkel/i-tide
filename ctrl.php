@@ -1,62 +1,94 @@
 <?
 namespace ctrl;
 use view\View;
+use view\ResourceInfo;
 use \NotAcceptable;
 use \NotImplemented;
 use \MethodNotAllowed;
+use \NotFound;
 
 abstract class Controller
 {
     private $handlers = array();
     private $views = array();
+    private $info = null;
+
+    final protected function registerHtmlView($filename, View &$view)
+    {
+        if (!is_file($filename) || !is_readable($filename))
+        {
+            throw new NotFound("File '$filename' is not found");
+        }
+
+        $this->info = (object) array(
+            'file' => $filename,
+            'view' => $view
+        );
+    }
 
     final protected function registerXmlView(View &$view)
     {
-        $res = $this;
-        $this->views[MIME_TYPE_XML] = function ($mimeType) use (&$res, &$view) {
-            $root = $view->asXml($res, $mimeType);
-            $doc = new \DOMDocument("1.0", $view->getCharSet());
+        $func = function (&$resource) use (&$view) {
+            $root = $view->asXml($resource);
+            $doc = new \DOMDocument("1.0", "UTF-8");
             $doc->appendChild($doc->importNode($root, true));
             return $doc->saveXML();
         };
+
+        $this->views[MIME_TYPE_APP_XML] = $func;
+        $this->views[MIME_TYPE_APP_HTML] = $func;
+        $this->views[MIME_TYPE_TEXT_XML] = $func;
     }
 
     final protected function registerJsonView(View &$view)
     {
-        $res = $this;
-        $this->views[MIME_TYPE_JSON] = function ($mimeType) use (&$res, &$view) {
-            return json_encode($view->asJson($res, $mimeType));
+        $func = function (&$resource) use (&$view) {
+            return json_encode($view->asJson($resource));
         };
+
+        $this->views[MIME_TYPE_APP_JSON] = $func;
+        $this->views[MIME_TYPE_TEXT_JSON] = $func;
     }
 
     final protected function registerTextView(View &$view)
     {
-        $res = $this;
-        $this->views[MIME_TYPE_TEXT] = function ($mimeType) use (&$res, &$view) {
-            return (string) $view->asText($res, $mimeType);
+        $this->views[MIME_TYPE_TEXT] = function (&$resource) use (&$view) {
+            return (string) $view->asText($resource);
         };
     }
 
-    final public function retrieveView($mimeType)
+    final public function retrieveModelInfo()
+    {
+        if ($this->info != null)
+        {
+            $resinfo = new ResourceInfo($this);
+            return $this->info->view->asInfo($resinfo);
+        }
+
+        throw new NotImplemented("Resource '".$this->getResourceName()."' does not support model descriptor");
+    }
+
+    final public function getView($mimeType)
     {
         if (array_key_exists($mimeType, $this->views))
         {
-            return $this->views[$mimeType]($mimeType);
+            $resourceInfo = new ResourceInfo($this);
+            return $this->views[$mimeType]($resourceInfo);
         }
 
-        throw new NotAcceptable("MIME type '$mimeType' is not supported for this resource");
+        throw new NotAcceptable("MIME type '$mimeType' is not supported for resource '".$this->getResourceName()."'");
     }
 
-    final public function getDefaultCharSet()
+    final public function getHtmlFile()
     {
-        return "UTF-8";
+        return $this->info->file;
     }
 
-    final public function getResourceUri()
+    final public function getResourceUrl()
     {
         $reflection = new \ReflectionClass($this);
         $resourceName = strtolower($reflection->getShortName());
-        $resourceUri = BASE_URI . "/$resourceName";
+        $resourceUri = BASE_URL . "/$resourceName";
         
         foreach (func_get_args() as $pathPart)
         {
@@ -64,6 +96,12 @@ abstract class Controller
         }
 
         return $resourceUri;
+    }
+
+    public function getResourceName()
+    {
+        $reflection = new \ReflectionClass($this);
+        return strtolower($reflection->getShortName());
     }
 
     final protected function registerGetHandler()
@@ -81,11 +119,11 @@ abstract class Controller
         };
     }
 
-    final public static function createResourceUri($resource)
+    final public static function createResourceUrl($resource)
     {
         $reflection = new \ReflectionClass($resource);
         $resourceName = strtolower($reflection->getShortName());
-        $resourceUri = BASE_URI . "/$resourceName";
+        $resourceUri = BASE_URL . "/$resourceName";
         
         foreach (array_slice(func_get_args(), 1) as $pathPart)
         {
@@ -126,7 +164,6 @@ abstract class Controller
     {
         return false;
     }
-
 }
 
 ?>

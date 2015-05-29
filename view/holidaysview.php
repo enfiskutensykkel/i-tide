@@ -2,7 +2,6 @@
 namespace view;
 use \DOMDocument;
 use view\DateInfo;
-use ctrl\Controller;
 
 final class HolidaysView extends View
 {
@@ -15,55 +14,56 @@ final class HolidaysView extends View
         $this->model = $model->getIterator();
     }
 
-    public function asJson(Controller $res = null)
+    public function asJson(ResourceInfo &$res)
     {
         $data = array();
 
         foreach ($this->model as $date => $name)
         {
-            $data[] = DateInfo::withoutHours($date, $name)->asJson();
+            $data[] = DateInfo::withoutHours($date, $name)->asJson($res);
         }
 
         return (object) array(
             'version' => VERSION,
+            'url' => $res->resource->getResourceUrl($this->year),
             'interval' => (object) array(
-                'uri' => $res->getResourceUri($this->year),
-                'start' => DateInfo::formatDate(mktime(0,0,0,1,1,$this->year)),
-                'end' => DateInfo::formatDate(mktime(0,0,0,12,31,$this->year)),
+                'url' => $res->resource->getResourceUrl($this->year),
+                'start' => DateInfo::formatDate(mktime(0, 0, 0, 1, 1, $this->year)),
+                'end' => DateInfo::formatDate(mktime(0, 0, 0, 12, 31, $this->year)),
                 'dates' => $data
             )
         );
     }
 
-    public function asXml(Controller $res = null)
+    public function asXml(ResourceInfo &$res)
     {
         $xml = new DOMDocument;
         $root = $xml->createElement("interval");
         $root->setAttribute("version", VERSION);
-        $root->setAttribute("uri", $res->getResourceUri($this->year));
+        $root->setAttribute("uri", $res->resource->getResourceUrl($this->year));
 
         $node = $xml->createElement("dates");
-        $node->setAttribute("start", DateInfo::formatDate(mktime(0,0,0,1,1,$this->year)));
-        $node->setAttribute("end", DateInfo::formatDate(mktime(0,0,0,12,31,$this->year)));
+        $node->setAttribute("start", DateInfo::formatDate(mktime(0, 0, 0, 1, 1, $this->year)));
+        $node->setAttribute("end", DateInfo::formatDate(mktime(0, 0, 0, 12, 31, $this->year)));
 
         foreach ($this->model as $date => $name)
         {
-            $node->appendChild($xml->importNode(DateInfo::withoutHours($date, $name)->asXml($xml), true));
+            $node->appendChild($xml->importNode(DateInfo::withoutHours($date, $name)->asXml($res), true));
         }
         $root->appendChild($node);
 
         return $root;
     }
 
-    public function asText()
+    public function asText(ResourceInfo &$res)
     {
         $list = "";
         $max = 0;
 
         foreach ($this->model as $date => $name)
         {
-            $line = DateInfo::withoutHours($date, $name)->asText();
-            $max = max($max, mb_strlen($line, $this->getCharSet()));
+            $line = DateInfo::withoutHours($date, $name)->asText($res);
+            $max = max($max, mb_strlen($line));
             $list .= $line;
         }
 

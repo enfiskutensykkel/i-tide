@@ -1,28 +1,47 @@
 <?
 namespace view;
+use ctrl\Controller;
 use \NotImplemented;
-use \DOMDocument;
+
+final class ResourceInfo
+{
+    public function __construct(Controller &$resource)
+    {
+        $this->resource = $resource;
+        $this->name = $resource->getResourceName();
+    }
+
+    public function __get($property)
+    {
+        if (isset($this->$property))
+        {
+            return $this->$property;
+        }
+
+        return null;
+    }
+}
 
 abstract class View
 {
-    public function getCharSet()
+    public function asXml(ResourceInfo &$resource)
     {
-        return "UTF-8";
+        throw new NotImplemented("XML is not implemented for resource '$resource->name'");
     }
 
-    public function asXml()
+    public function asJson(ResourceInfo &$resource)
     {
-        throw new NotImplemented("XML is not implemented for this resource");
+        throw new NotImplemented("JSON is not implemented for resource '$resource->name'");
     }
 
-    public function asJson()
+    public function asText(ResourceInfo &$resource)
     {
-        throw new NotImplemented("JSON is not implemented for this resource");
+        throw new NotImplemented("Plain text is not implemented for resource '$resource->name'");
     }
 
-    public function asText()
+    public function asInfo(ResourceInfo &$resource)
     {
-        throw new NotImplemented("Plain text is not implemented for this resource");
+        throw new NotImplemented("Model descriptor is not implemented for resource '$resource->name'");
     }
 }
 

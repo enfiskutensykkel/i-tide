@@ -1,42 +1,42 @@
 <?
 namespace view;
-use ctrl\Controller;
 use \DOMDocument;
 
 final class ResourcesInfo extends View
 {
-    public function asJson(Controller $resource = null)
+    public function asJson(ResourceInfo &$resource)
     {
         return (object) array(
             'version' => VERSION,
+            'url' => $resource->resource->getResourceUrl(),
             'resources' => array(
                 (object) array(
                     'type' => "status",
-                    'uri' => $resource->createResourceUri('ctrl\Status')
+                    'url' => $resource->resource->createResourceUrl('ctrl\Status')
                 ),
                 (object) array(
                     'type' => "saleshours",
-                    'uri' => $resource->createResourceUri('ctrl\Hours')
+                    'url' => $resource->resource->createResourceUrl('ctrl\Hours')
                 ),
                 (object) array(
                     'type' => "interval",
-                    'uri' => $resource->createResourceUri('ctrl\Holidays')
+                    'url' => $resource->resource->createResourceUrl('ctrl\Holidays')
                 ),
                 (object) array(
                     'type' => "interval",
-                    'uri' => $resource->createResourceUri('ctrl\Month')
+                    'url' => $resource->resource->createResourceUrl('ctrl\Month')
                 ),
             )
         );
     }
 
-    public function asXml(Controller $resource = null)
+    public function asXml(ResourceInfo &$resource)
     {
         $xml = new DOMDocument;
 
         $root = $xml->createElement("resources");
         $root->setAttribute("version", VERSION);
-        $root->setAttribute("uri", $resource->getResourceUri());
+        $root->setAttribute("url", $resource->resource->getResourceUrl());
 
         $json = $this->asJson($resource);
 
@@ -44,7 +44,7 @@ final class ResourcesInfo extends View
         {
             $ep = $xml->createElement("resource");
             $ep->setAttribute("type", $endpoint->type);
-            $ep->setAttribute("uri", $endpoint->uri);
+            $ep->setAttribute("url", $endpoint->url);
             $root->appendChild($ep);
         }
 

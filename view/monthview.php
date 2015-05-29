@@ -1,7 +1,6 @@
 <?
 namespace view;
 use view\DateInfo;
-use ctrl\Controller;
 use \DOMDocument;
 
 final class MonthView extends View
@@ -17,12 +16,12 @@ final class MonthView extends View
         $this->month = $month;
     }
 
-    public function asXml(Controller $resource = null)
+    public function asXml(ResourceInfo &$res)
     {
         $xml = new DOMDocument;
         $root = $xml->createElement("interval");
         $root->setAttribute("version", VERSION);
-        $root->setAttribute("uri", $resource->getResourceUri($this->year, $this->month));
+        $root->setAttribute("url", $res->resource->getResourceUrl($this->year, $this->month));
 
         $node = $root->appendChild($xml->createElement("dates"));
         $node->setAttribute("start", DateInfo::formatDate($this->iterator->from));
@@ -30,24 +29,25 @@ final class MonthView extends View
 
         foreach ($this->iterator as $date => $hours)
         {
-            $node->appendChild($xml->importNode(DateInfo::withHours($hours)->asXml(), true));
+            $node->appendChild($xml->importNode(DateInfo::withHours($hours)->asXml($res), true));
         }
 
         return $root;
     }
 
-    public function asJson(Controller $resource = null)
+    public function asJson(ResourceInfo &$res)
     {
         $list = array();
         foreach ($this->iterator as $date => $hours)
         {
-            $list[] = DateInfo::withHours($hours)->asJson();
+            $list[] = DateInfo::withHours($hours)->asJson($res);
         }
 
         return (object) array(
             'version' => VERSION,
+            'url' => $res->resource->getResourceUrl($this->year, $this->month),
             'interval' => (object) array(
-                'uri' => $resource->getResourceUri($this->year, $this->month),
+                'url' => $res->resource->getResourceUrl($this->year, $this->month),
                 'start' => DateInfo::formatDate($this->iterator->from),
                 'end' => DateInfo::formatDate($this->iterator->to),
                 'dates' => $list
@@ -55,19 +55,19 @@ final class MonthView extends View
         );
     }
 
-    public function asText()
+    public function asText(ResourceInfo &$res)
     {
         $list = "";
         $max = 0;
 
         foreach ($this->iterator as $date => $hours)
         {
-            $line = DateInfo::withHours($hours)->asText();
-            $max = max($max, mb_strlen($line, "UTF-8"));
+            $line = DateInfo::withHours($hours)->asText($res);
+            $max = max($max, mb_strlen($line));
             $list .= $line;
         }
 
-        $text = "Utsalgstider for " . strtolower(\MONTHNAME($this->month)) . " $this->year \n";
+        $text = "Utsalgstider for " . strtolower(\MONTH_NAME($this->month)) . " $this->year \n";
         $text .= str_repeat("=", $max) . "\n";
         $text .= $list;
 

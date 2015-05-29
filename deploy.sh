@@ -8,6 +8,6 @@ done
 ln -s htaccess .htaccess
 for file in `find ./ -type f -name "*.php"`; do
 	newname="$file"s
-	#ln -s $file $newname
+	ln -s `basename $file` $newname
 done
 

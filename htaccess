@@ -10,7 +10,7 @@ RewriteRule ^(.*)$ http://heim.ifi.uio.no/jonassm/i-tide/$1 [R=301,NC,L]
 # FIXME: This only applies for /rest endpoints, redo somehow
 RewriteCond %{REQUEST_METHOD} !^(GET) [NC]
 RewriteRule .* - [R=405,L]
-RewriteCond %{HTTP:Accept} !(application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
+RewriteCond %{HTTP:Accept} !(text/html|application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
 RewriteRule .* - [R=406,L]
 
 # Stop rewrite loops
@@ -18,8 +18,10 @@ RewriteRule ^redirect:/ - [R=404,L]
 RewriteCond %{ENV:REDIRECT_STATUS} 200
 RewriteRule .* - [L]
 
-# Prevent direct access except for phps
-##RewriteRule (.*\.phps) $1 [R=200,L]
+# Prevent direct file access for everything except CSS, JS and PHP source code files
+RewriteRule ^css/.*$ - [L]
+RewriteRule ^js/.*$ - [L]
+RewriteRule ^.*\.phps$ - [L]
 #RewriteCond %{REQUEST_FILENAME} -f
 #RewriteRule .* - [R=404,L]
 
@@ -54,7 +56,7 @@ RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|
 RewriteRule ^res/month/([0-9]{4})-([0-9]{1,2})(\.(txt|xml|json))?/?$ rest.php?ctrl=month&type=%1&view=$4&year=$1&month=$2 [L,NC,QSA]
 
 RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
-RewriteRule ^rest/month/([0-9]{1,2}|january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)(\.(txt|xml|json))?/?$ rest.php?ctrl=month&type=%1&view=$3&year=0&month=$1 [L,NC,QSA]
+RewriteRule ^res/month/([0-9]{1,2}|january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)(\.(txt|xml|json))?/?$ rest.php?ctrl=month&type=%1&view=$3&year=0&month=$1 [L,NC,QSA]
 
 # TODO: week (no arg=this week)
 # TODO: non-rest endpoints
@@ -65,14 +67,18 @@ RewriteRule ^res/resources(\.(txt|xml|json))?/?$ rest.php?ctrl=resources&type=%1
 RewriteRule ^res/$ /jonassm/i-tide/res/resources [R=301,L,NC]
 
 # Short form of hours, redirect to hours
-RewriteRule ^(today|tomorrow)(.*)$ /jonassm/i-tide/res/hours/$1$2 [R=301,L,NC]
-RewriteRule ^res/([0-9]{4})-([01][0-9])-([0-3][0-9])(.*)$ /jonassm/i-tide/res/hours/$1-$2-$3$4 [R=301,L,NC]
+RewriteRule ^res/today(.*)$ /jonassm/i-tide/res/status$1 [R=301,L,NC]
+RewriteRule ^res/tomorrow(.*)$ /jonassm/i-tide/res/hours/$2 [R=301,L,NC]
+RewriteRule ^res/([0-9]{4})[\-/]([01][0-9])[\-/]([0-3][0-9])(.*)$ /jonassm/i-tide/res/hours/$1-$2-$3$4 [R=301,L,NC]
 
 RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
 RewriteRule ^res/hours(\.(txt|xml|json))?/?$ rest.php?ctrl=hours&type=%1&view=$2&year=0&month=0&day=&0&override=today [L,NC,QSA]
 
 RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
 RewriteRule ^res/hours/(today|tomorrow)(\.(txt|xml|json))?/?$ rest.php?ctrl=hours&type=%1&view=$3&year=0&month=0&day=0&override=$1 [L,NC,QSA]
+
+# /calendar
+RewriteRule ^calendar(\.html)?/?$ html.php?view=calendar [L,NC,QSA]
 
 ### END ROUTES ###
 

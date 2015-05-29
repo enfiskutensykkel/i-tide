@@ -27,7 +27,7 @@ TODO list:
    - [x] Holidays list (`/res/holidays/[YYYY]`)
    - [x] Month view (`/res/month/[YYYY-MM]`)
    - [ ] Week view (`/res/week/[YYYY-<weeknumber>]`)
-   - [ ] Upcoming (`/res/upcoming/[YYYY-MM-DD|today|tomorrow]`)
+   - [ ] ~~Upcoming (`/res/upcoming/[YYYY-MM-DD|today|tomorrow]`)~~ Included in status.
    - [x] API descriptor view (`/res/resources`)
  - [ ] Calendar UI (front-end)
    - [ ] Bootstrap CSS
@@ -66,8 +66,7 @@ The content language is Norwegian (no), but end-points, datatypes, data structur
 etc. are named in English. 
 All data is UTF-8 encoded, which is relevant for the Norwegian specific characters:
 Æ æ Ø ø Å å.
-Dates are formatted as `YYYY-MM-DD`, time is 
-formatted as `HH:mm` for sales hours or `HH:mm:ss` for current time and countdown timers.
+Dates are formatted as `YYYY-MM-DD` and time is formatted as `HH:mm`.
 
 Most of the end-points currently supports 
 delivering data in three different data formats: XML, JSON or plain text. 

@@ -1,17 +1,8 @@
 <?
-require_once( 'http.php' );
-require_once( 'mime.php' );
-
-function MIME_TYPE($shortname, $default = MIME_TYPE_APP_JSON)
-{
-    $map = array(
-        'json' => MIME_TYPE_APP_JSON,
-        'xml' => MIME_TYPE_APP_XML,
-        'txt' => MIME_TYPE_TEXT
-    );
-
-    return array_key_exists($shortname, $map) ? $map[$shortname] : $default;
-}
+/* I would have put these functions in a util namespace, but the version
+ * of PHP this server is running does not handle functions in namespaces
+ * all that well.
+ */
 
 function YEAR($year)
 {
@@ -20,12 +11,12 @@ function YEAR($year)
         return date('Y');
     }
 
-    if (2010 < $year && $year < 2072)
+    if (1970 <= $year && $year <= 2032)
     {
         return (int) $year;
     }
 
-    throw new BadRequest("Invalid year, must be in range 2010-2072");
+    throw new BadRequest("Invalid year, must be in range 1970-2032");
 }
 
 function MONTH($month)
@@ -113,16 +104,40 @@ function DAY($day, $month=0)
     throw new BadRequest("Invalid day, must be in range 1-31");
 }
 
+
 function WEEKDAY($timestamp)
 {
-    $days = array("Søndag", "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag");
+    $days = array(
+        "Søndag", 
+        "Mandag", 
+        "Tirsdag", 
+        "Onsdag", 
+        "Torsdag", 
+        "Fredag", 
+        "Lørdag"
+    );
+
     return $days[date('w', $timestamp)];
 }
 
-function MONTHNAME($month)
+function MONTH_NAME($month)
 {
-    $months = array("Januar", "Februar", "Mars", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Desember");
-    return $months[$month-1];
+    $months = array(
+        "Januar", 
+        "Februar", 
+        "Mars", 
+        "April", 
+        "Mai", 
+        "Juni", 
+        "Juli", 
+        "August", 
+        "September", 
+        "Oktober", 
+        "November", 
+        "Desember"
+    );
+
+    return $months[MONTH($month - 1)];
 }
 
 ?>

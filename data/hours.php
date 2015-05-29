@@ -147,7 +147,7 @@ final class Hours
         return $date;
     }
 
-    public function getUpcomingEvent($max_days = 3)
+    public function getUpcomingEvent($max_days = 6)
     {
         $date = $this;
 
