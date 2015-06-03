@@ -28,6 +28,11 @@ final class Hours
         $this->tomorrow_type = $this->holidays->getDateType($this->tomorrow);
     }
 
+    public function getNextDay()
+    {
+        return new self($this->tomorrow);
+    }
+
     public static function createFromTimestamp($timestamp)
     {
         $year = date('Y', $timestamp);
@@ -110,9 +115,9 @@ final class Hours
         return $this->sunday;
     }
 
-    public function isDayBeforeHoliday()
+    public function isDayBeforeHoliday($includeSaturdays = true)
     {
-        if ($this->saturday || $this->tomorrow_type == Holidays::HOLIDAY)
+        if (($includeSaturdays && $this->saturday) || $this->tomorrow_type == Holidays::HOLIDAY)
         {
             return true;
         }

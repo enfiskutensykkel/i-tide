@@ -33,12 +33,11 @@ final class ResourcesInfo extends View
     public function asXml(ResourceInfo &$resource)
     {
         $xml = new DOMDocument;
+        $json = $this->asJson($resource);
 
         $root = $xml->createElement("resources");
-        $root->setAttribute("version", VERSION);
-        $root->setAttribute("url", $resource->resource->getResourceUrl());
-
-        $json = $this->asJson($resource);
+        $root->setAttribute("version", $json->version);
+        $root->setAttribute("url", $json->url);
 
         foreach ($json->resources as $endpoint)
         {
@@ -51,6 +50,10 @@ final class ResourcesInfo extends View
         return $root;
     }
 
+    public function asInfo(ResourceInfo &$resource)
+    {
+        return $this->asJson($resource)->resources;
+    }
 }
 
 ?>

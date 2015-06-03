@@ -2,8 +2,9 @@
 namespace data;
 use data\Hours;
 use \Iterator;
+use \ArrayAccess;
 
-final class TimeInterval implements Iterator
+final class TimeInterval implements Iterator, ArrayAccess
 {
     private $hours = array();
     private $keys = array();
@@ -68,15 +69,25 @@ final class TimeInterval implements Iterator
         $this->populate($year_from, $month_from, $day_from, $year_to, $month_to, $day_to);
     }
 
+    public static function createForCalendar($year, $month)
+    {
+        $firstInMonth = mktime(0, 0, 0, $month, 1, $year);
+        $offset = date("w", $firstInMonth) - 1;
+        $first = strtotime("-$offset days", $firstInMonth);
+
+        $lastInMonth = mktime(0, 0, 0, $month, date('t', $firstInMonth), $year);
+        $offset = date("w", $lastInMonth);
+        $last = strtotime("-$offset days", strtotime("+7 days", $lastInMonth));
+        
+        return new self($first, $last);
+        
+    }
+
     public static function createForMonth($year, $month)
     {
         $first = mktime(0, 0, 0, $month, 1, $year);
         $days = date('t', $first);
         return new self($first, mktime(0, 0, 0, $month, $days, $year));
-    }
-
-    public static function createForWeek($year, $week)
-    {
     }
 
     public function __get($property)
@@ -91,6 +102,45 @@ final class TimeInterval implements Iterator
         }
 
         return null;
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        throw new Exception("Can't set values");
+    }
+
+    public function offsetUnset($offset)
+    {
+        throw new Exception("Can't unset values");
+    }
+
+    public function offsetGet($offset)
+    {
+        if (array_key_exists($offset, $this->hours))
+        {
+            return $this->hours[$offset];
+        }
+        else if (array_key_exists($offset, $this->keys))
+        {
+            return $this->hours[$this->keys[$offset]];
+        }
+        echo "<pre>"; var_dump($offset); echo "</pre>"; die();
+
+        return null;
+    }
+
+    public function offsetExists($offset)
+    {
+        if (array_key_exists($offset, $this->hours))
+        {
+            return true;
+        }
+        else if (array_key_exists($offset, $this->keys))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     public function rewind()

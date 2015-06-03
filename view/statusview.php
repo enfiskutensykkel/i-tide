@@ -1,10 +1,12 @@
 <?
 namespace view;
+use data\Hours;
 use view\HoursView;
 use \DOMDocument;
 
 final class StatusView extends View
 {
+    private $ts;
     private $time;
     private $date;
     private $data;
@@ -12,8 +14,11 @@ final class StatusView extends View
     private $wine;
     private $note;
 
-    public function __construct($timestamp, $hours)
+    public function __construct($timestamp)
     {
+        $hours = Hours::createFromTimestamp($timestamp);
+        $this->ts = $timestamp;
+
         $this->time = DateInfo::formatTime($timestamp);
         $this->date = DateInfo::formatDate($timestamp);
         $this->data = $hours;
@@ -74,6 +79,41 @@ final class StatusView extends View
                 'note' => $note
             )
         );
+    }
+
+    public function asInfo(ResourceInfo &$res)
+    {
+        $note = null;
+        if ($this->note != null)
+        {
+            $note = (object) array(
+                'date' => DateInfo::formatDate($this->note->getDate()),
+                'info' => $this->note->getDateInfo()
+            );
+        }
+
+        return (object) array(
+            'date' => DateInfo::formatDate($this->ts),
+            'beer' => $this->timeleft($this->data->getRemainingBeerTime($this->ts)),
+            'wine' => $this->timeleft($this->data->getRemainingWineTime($this->ts)),
+            'note' => $note,
+            'hours' => (new HoursView($this->data))->asJson($res)->saleshours
+        );
+    }
+
+    static private function timeleft($remaining)
+    {
+        // This is a hack, but I will rather do this than to create 
+        // a bunch of functions just for this purpose
+        if ($remaining != null)
+        {
+            return (object) array(
+                'hoursleft' => (int) date('H', $remaining),
+                'minsleft' => (int) date('i', $remaining)
+            );
+        }
+
+        return null;
     }
 
     public function asXml(ResourceInfo &$res)

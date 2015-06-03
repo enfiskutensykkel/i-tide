@@ -73,6 +73,7 @@ final class MonthView extends View
 
         return $text;
     }
+
 }
 
 ?>

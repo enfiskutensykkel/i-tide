@@ -158,7 +158,7 @@ final class DateInfo extends View
         }
 
         return (object) array(
-            'dateinfo' => $node
+            'dateinfo' => (object) $node
         );
     }
 

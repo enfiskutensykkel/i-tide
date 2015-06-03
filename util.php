@@ -8,7 +8,7 @@ function YEAR($year)
 {
     if ($year == 0)
     {
-        return date('Y');
+        return (int) date('Y');
     }
 
     if (1970 <= $year && $year <= 2032)
@@ -65,7 +65,7 @@ function MONTH($month)
 
     if ($month == 0)
     {
-        return date('m');
+        return (int) date('m');
     }
 
 
@@ -81,7 +81,7 @@ function DAY($day, $month=0)
 {
     if ($day == 0)
     {
-        return date('d');
+        return (int) date('d');
     }
 
     if (1 <= $day && $day <= 31)
@@ -103,7 +103,6 @@ function DAY($day, $month=0)
 
     throw new BadRequest("Invalid day, must be in range 1-31");
 }
-
 
 function WEEKDAY($timestamp)
 {

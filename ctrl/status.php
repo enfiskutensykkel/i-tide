@@ -1,6 +1,5 @@
 <?
 namespace ctrl;
-use data\Hours;
 use view\StatusView;
 
 final class Status extends Controller
@@ -12,8 +11,7 @@ final class Status extends Controller
 
     public function handleGet()
     {
-        $ts = time();
-        $view = new StatusView($ts, Hours::createFromTimestamp($ts));
+        $view = new StatusView(time());
 
         parent::registerJsonView($view);
         parent::registerXmlView($view);

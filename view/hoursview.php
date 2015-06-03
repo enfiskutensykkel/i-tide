@@ -62,6 +62,14 @@ final class HoursView extends View
 
         return $text;
     }
+
+    public function asInfo(ResourceInfo &$res)
+    {
+        return (object) array(
+            'current' => $this->view->asJson($res),
+            'next' => $this->next->asJson($res),
+        );
+    }
 }
 
 ?>

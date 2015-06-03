@@ -1,7 +1,6 @@
 <?
 namespace ctrl;
 use data\Hours as Model;
-use data\Holidays as HModel;
 use view\HoursView as View;
 
 final class Hours extends Controller
@@ -31,7 +30,7 @@ final class Hours extends Controller
             $date = mktime(0, 0, 0, $month, $day, $year);
         }
 
-        $view = new View(new Model($date), HModel::getFromCache(date('Y', $date)));
+        $view = new View(new Model($date));
         parent::registerXmlView($view);
         parent::registerJsonView($view);
         parent::registerTextView($view);
