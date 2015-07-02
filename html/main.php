@@ -1,8 +1,17 @@
 <?
-function plural($number, $stem)
+function maketimeleft($timeleft)
 {
-    $pl = substr($stem, -1) == "e" ? "r" : "er";
-    echo $number != 1 ? "$number $stem$pl" : "$number $stem";
+    $hours = $timeleft->hoursleft != 1 ? "timer" : "time";
+    $mins = $timeleft->minsleft != 1 ? "minutter" : "minutt";
+
+    if ($timeleft->hoursleft > 0)
+    {
+        echo "$timeleft->hoursleft $hours og $timeleft->minsleft $mins";
+    }
+    else
+    {
+        echo "$timeleft->minsleft $mins";
+    }
 }
 
 function fulldate($datestr, $year=false, $day=false, $lcase=false)
@@ -99,11 +108,7 @@ function lastmonth($datestr, $url)
                         </h2>
 <? if ($data->today->beer) : ?>
                         <p id="beer" class="<? getclass($data->today->beer); ?>">
-<? if ($data->today->beer->hoursleft > 0) : ?>
-                            <strong id="beerleft" class="text-nowrap"><? plural($data->today->beer->hoursleft, "time"); ?> og <? plural($data->today->beer->minsleft, "minutt"); ?></strong> til &oslash;lsalget stenger.
-<? else : ?>
-                            <strong id="beerleft" class="text-nowrap"><? plural($data->today->beer->minsleft, "minutt"); ?></strong> til &oslash;lsalget stenger!
-<? endif; ?>
+                            <strong id="beerleft" class="text-nowrap"><? maketimeleft($data->today->beer); ?></strong> til &oslash;lsalget stenger.
                         </p>
 <? else : ?>
                         <p id="beer" class="text-muted">
@@ -113,11 +118,7 @@ function lastmonth($datestr, $url)
 
 <? if ($data->today->wine) : ?>
                         <p id="wine" class="<? getclass($data->today->wine); ?>">
-<? if ($data->today->wine->hoursleft > 0) : ?>
-                            <strong id="wineleft" class="text-nowrap"><? plural($data->today->wine->hoursleft, "time"); ?> og <? plural($data->today->wine->minsleft, "minutt"); ?></strong> til vinmonopolet stenger.
-<? else : ?>
-                            <strong id="wineleft" class="text-nowrap"><? plural($data->today->wine->minsleft, "minutt"); ?></strong> til vinmonopolet stenger!
-<? endif; ?>
+                            <strong id="wineleft" class="text-nowrap"><? maketimeleft($data->today->wine); ?></strong> til vinmonopolet stenger.
                         </p>
 <? else : ?>
                         <p id="wine" class="text-muted">
@@ -242,6 +243,22 @@ endif; ?>
 <script type="text/javascript">
 $(document).ready(function () {
     var update = function (cb) {
+        var maketext = function (timeleft) {
+            var time = timeleft.split(":");
+            var hours = parseInt(time[0]);
+            var mins = parseInt(time[1]);
+
+            var plural_mins = mins != 1 ? "er" : "";
+            var plural_hours = hours != 1 ? "er" : "e";
+
+            if (hours > 0)
+            {
+                return hours + " tim" + plural_hours + " og " + mins + " minutt" + plural_mins;
+            }
+
+            return mins + " minutt" + plural_mins;
+        };
+
         $.ajax({
             url: '<? echo BASE_URL; ?>/res/status',
             dataType: 'json',
@@ -250,23 +267,25 @@ $(document).ready(function () {
                 var wine = data.status.wine;
 
                 if (beer && beer.timeleft) {
+                    $("#beerleft").text(maketext(beer.remaining));
                 } else {
+                    $("#beer").removeClass("text-warning text-danger").addClass("text-muted").text("Ølutsalget er stengt.");
                 }
 
                 if (wine && wine.timeleft) {
-
+                    $("#wineleft").text(maketext(wine.remaining));
                 } else {
-                    $("#wine").removeClass("text-warning text-danger").addClass("text-muted").text("Vinmonopolet er stengt");
+                    $("#wine").removeClass("text-warning text-danger").addClass("text-muted").text("Vinmonopolet er stengt.");
                 }
 
                 if ((beer && beer.timeleft) || (wine && wine.timeleft)) {
-                    window.setTimeout(function () { cb(cb); }, 1000);
+                    window.setTimeout(function () { cb(cb); }, 15000);
                 }
             }
         });
     };
 
-    //update(update);
+    update(update);
 });
 </script>
     </body>

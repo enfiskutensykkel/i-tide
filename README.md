@@ -32,7 +32,7 @@ TODO list:
  - [x] Calendar UI (front-end)
    - [x] Bootstrap CSS
    - [ ] ~~Responsive design~~ I thought Bootstrap CSS would do this for me; apparently not so well
-   - [ ] JavaScript AJAX for real-time updates
+   - [x] JavaScript AJAX for real-time updates
  - [ ] Error handling
    - [ ] Debug output
    - [ ] Client feedback
