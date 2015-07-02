@@ -17,19 +17,64 @@ function monthyear($datestr)
     $t = strtotime($datestr);
     echo MONTH_NAME(date('m', $t)) . " " . date('Y', $t);
 }
+
+function getclass($hours)
+{
+    echo "";
+}
+
+function geturl($datestr)
+{
+    $date = explode("-", $datestr);
+    $year = $date[0];
+    $month = $date[1];
+    $day = $date[2];
+    echo "?year=$year&month=$month&day=$day";
+}
+
+function nextmonth($datestr, $url)
+{
+    $date = explode("-", $datestr);
+    $year = $date[0];
+    $month = (int) $date[1] - 1;
+    $month = ($month + 1) % 12 + 1;
+    if ($month == 1)
+    {
+        ++$year;
+    }
+    echo $url ? "?year=$year&month=$month&day=1" : MONTH_NAME($month);
+}
+
+function lastmonth($datestr, $url)
+{
+    $date = explode("-", $datestr);
+    $year = $date[0];
+    $month = (int) $date[1] - 1;
+    $month = ($month - 1) % 12 + 1;
+    if ($month == 0)
+    {
+        $month = 12;
+        --$year;
+    }
+    echo $url ? "?year=$year&month=$month&day=1" : MONTH_NAME($month);
+}
 ?>
 <!DOCTYPE html>
 <html lang="no">
     <head>
         <link rel="stylesheet" href="css/bootstrap.min.css" media="all"/>
         <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
-        <style>td, tr { cursor: default; }</style>
+        <style>
+            td, tr { cursor: default; }
+            td a, a:hover, a:link, a:visited, a:focus, a:active { text-decoration: none; color: inherit; display: block;}
+        </style>
 
         <title>Utsalgstider for alkohol</title>
         <meta charset="UTF-8">
         <meta name="description" content="En oversikt over utsalgstidene for alkohol">
         <meta name="author" content="Jonas Markussen">
         <meta name="keywords" content="øl, vin, vinmonopol, ølsalg, alkohol">
+        <meta name="robots" content="NOARCHIVE, NOODP">
     </head>
     <body>
         <div class="container-fluid">
@@ -53,8 +98,7 @@ function monthyear($datestr)
                             <small class="text-nowrap"><? fulldate($data->today->date); ?></small>
                         </h2>
 <? if ($data->today->beer) : ?>
-<? $class = $data->today->beer->hoursleft == 0 ? ($data->today->beer->minsleft <= 20 ? "text-danger" : "text-warning") : ""; ?>
-                        <p id="beer" class="<? echo $class; ?>">
+                        <p id="beer" class="<? getclass($data->today->beer); ?>">
 <? if ($data->today->beer->hoursleft > 0) : ?>
                             <strong id="beerleft" class="text-nowrap"><? plural($data->today->beer->hoursleft, "time"); ?> og <? plural($data->today->beer->minsleft, "minutt"); ?></strong> til &oslash;lsalget stenger.
 <? else : ?>
@@ -68,8 +112,7 @@ function monthyear($datestr)
 <? endif; ?>
 
 <? if ($data->today->wine) : ?>
-<? $class = $data->today->beer->hoursleft <= 1 ? ($data->today->beer->hoursleft == 0 && $data->today->beer->minsleft <= 40 ? "text-danger" : "text-warning") : ""; ?>
-                        <p id="wine" class="<? echo $class; ?>">
+                        <p id="wine" class="<? getclass($data->today->wine); ?>">
 <? if ($data->today->wine->hoursleft > 0) : ?>
                             <strong id="wineleft" class="text-nowrap"><? plural($data->today->wine->hoursleft, "time"); ?> og <? plural($data->today->wine->minsleft, "minutt"); ?></strong> til vinmonopolet stenger.
 <? else : ?>
@@ -138,28 +181,59 @@ $bgclass = $day->date == $data->selected->date ? "bg-primary" : $bgclass;
                                 <td class="<? echo $bgclass; ?> text-nowrap text-center">
 <? if (!$day->part) : ?>
                                     <span class="text-muted">
-<? endif; ?>
                                         <? echo date("j", strtotime($day->date)); ?>
-<? if (!$day->part) : ?>
                                     </span>
-<? endif; ?>
+<? else : 
+$title = "&#13;";
+$title .= $day->beer ? "&Oslash;lutsalg: ".$day->beer->open." - ".$day->beer->close : "&Oslash;lutsalg: Stengt";
+$title .= "&#13;";
+$title .= $day->wine ? "Vinmonopolet: ".$day->wine->open." - ".$day->wine->close : "Vinmonopolet: Stengt";
+?>
+                                        <a href="<? geturl($day->date); ?>" title="<? fulldate($day->date, true, true); echo $title;?> ">
+                                        <? echo date("j", strtotime($day->date)); ?>
+                                    </a>
+<?
+unset($title);
+endif; ?>
                                 </td>
 <? endforeach; ?>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+                <ul class="pager">
+                    <li><a href="<? lastmonth($data->selected->date, true); ?>"><span aria-hidden="true">&larr;</span> <? lastmonth($data->selected->date, false); ?></a></li>
+                    <li><a href="<? geturl($data->today->date); ?>">I dag</a></li>
+                    <li><a href="<? geturl($data->tomorrow->date); ?>">I morgen</a></li>
+                    <li><a href="<? nextmonth($data->selected->date, true); ?>"><? nextmonth($data->selected->date, false); ?> <span aria-hidden="true">&rarr;</span></a></li>
+              </ul>
             </div>
 
             <div class="container" style="min-width: 500px;">
                 <div id="info" class="panel panel-default">
                     <div class="panel-heading"><h1 class="panel-title"><? fulldate($data->selected->date, true, true); ?></h1></div>
                     <div class="panel-body">
+<? if ($data->selected->info) : ?>
+                        <p>
+                            <strong><? echo $data->selected->info; ?></strong>
+                        </p>
+<? endif; ?>
+
 <? if ($data->selected->beer) : ?>
-                        <p>&Oslash;lsalget er &aring;pent fra <? echo $data->selected->beer->open; ?>.</p>
+                        <p>&Oslash;lsalget er &aring;pent fra <? echo $data->selected->beer->open; ?> til <? echo $data->selected->beer->close; ?>.</p>
 <? else : ?>
                         <p>&Oslash;lsalget er stengt.</p>
 <? endif; ?>
+
+<? if ($data->selected->wine) : ?>
+                        <p>Vinmonopolet er &aring;pent fra <? echo $data->selected->wine->open; ?> til <? echo $data->selected->wine->close; ?>.</p>
+<? else : ?>
+                        <p>Vinmonopolet er stengt.</p>
+<? endif; ?>
+
+                        <p>
+                            Neste mulige er <? fulldate($data->selected->next, false, true, true); ?>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -192,7 +266,7 @@ $(document).ready(function () {
         });
     };
 
-    update(update);
+    //update(update);
 });
 </script>
     </body>

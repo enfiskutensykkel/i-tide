@@ -8,10 +8,10 @@ RewriteRule ^(.*)$ http://heim.ifi.uio.no/jonassm/i-tide/$1 [R=301,NC,L]
 
 # Only allow GET requests with accept JSON, XML or plain text
 # FIXME: This only applies for /rest endpoints, redo somehow
-RewriteCond %{REQUEST_METHOD} !^(GET) [NC]
-RewriteRule .* - [R=405,L]
-RewriteCond %{HTTP:Accept} !(text/html|application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
-RewriteRule .* - [R=406,L]
+#RewriteCond %{REQUEST_METHOD} !^(GET) [NC]
+#RewriteRule .* - [R=405,L]
+#RewriteCond %{HTTP:Accept} !(text/html|application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
+#RewriteRule .* - [R=406,L]
 
 # Stop rewrite loops
 RewriteRule ^redirect:/ - [R=404,L]
@@ -29,7 +29,9 @@ RewriteRule ^.*\.phps$ - [L]
 
 # TODO:
 # Date endpoints: /date /date/2015-05-05
-# Calendar endpoints: /calendar /calendar/2015/february /holidays /holidays/2015 /calendar/2015/42 (week)
+# Calendar endpoints: /calendar (default to current month) /calendar/2015 (year) /calendar/2015/february (month) /holidays /holidays/2015 /calendar/2015/42 (week)
+# API descriptor /resources
+# redirect index.htm and index.html to /calendar
 
 
 # /res/holidays

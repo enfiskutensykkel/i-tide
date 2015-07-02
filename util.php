@@ -136,7 +136,7 @@ function MONTH_NAME($month)
         "Desember"
     );
 
-    return $months[MONTH($month - 1)];
+    return $months[MONTH($month) - 1];
 }
 
 ?>

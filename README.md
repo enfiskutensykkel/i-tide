@@ -29,10 +29,10 @@ TODO list:
    - [ ] Week view (`/res/week/[YYYY-<weeknumber>]`)
    - [ ] ~~Upcoming (`/res/upcoming/[YYYY-MM-DD|today|tomorrow]`)~~ Included in status.
    - [x] API descriptor view (`/res/resources`)
- - [ ] Calendar UI (front-end)
-   - [ ] Bootstrap CSS
-   - [ ] Responsive design
-   - [ ] JavaScript AJAX
+ - [x] Calendar UI (front-end)
+   - [x] Bootstrap CSS
+   - [ ] ~~Responsive design~~ I thought Bootstrap CSS would do this for me; apparently not so well
+   - [ ] JavaScript AJAX for real-time updates
  - [ ] Error handling
    - [ ] Debug output
    - [ ] Client feedback

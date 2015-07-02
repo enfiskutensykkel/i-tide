@@ -27,7 +27,7 @@ final class CalendarView extends View
         $tomorrow = (new HoursView($this->today->getNextDay()))->asInfo($res);
 
         $selected = (new HoursView($this->selected))->asInfo($res);
-        $selectedNext = DateInfo::withoutInfo($this->selected->getNextDay()->getDate());
+        $selectedNext = DateInfo::withoutInfo($this->selected->getNextPossible()->getDate());
 
         $month = date('m', $this->selected->getDate());
 
