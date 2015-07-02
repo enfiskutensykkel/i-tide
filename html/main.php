@@ -294,7 +294,7 @@ $(document).ready(function () {
                     $("#beerleft").text(maketext(beer.remaining));
                     $("#beer").removeClass("text-warning text-danger").addClass(makeclass(beer.remaining));
                 } else {
-                    $("#beer").removeClass("text-warning text-danger").addClass("text-muted").text("Ølutsalget er stengt.");
+                    $("#beer").removeClass("text-warning text-danger").addClass("text-muted").text("Ølsalget er stengt.");
                 }
 
                 if (wine && wine.timeleft) {
@@ -311,7 +311,9 @@ $(document).ready(function () {
         });
     };
 
+<? if ($data->today->beer || $data->today->wine) : ?>
     update(update);
+<? endif; ?>
 });
 </script>
     </body>
