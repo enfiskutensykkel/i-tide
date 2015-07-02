@@ -55,6 +55,10 @@ timers.
 I will try to make it with a responsive design, as the old version didn't 
 quite work on small screens such as mobile phones.
 
+The idea is to use PHP as a template language (as it was originally intended).
+I try to separate business logic from presentation as far as possible by using
+the same MVC design as for the REST API.
+
 RESTy API
 ---------
 I've implemented a REST-like (hence "REST**y**") API for this version. Seeing how
