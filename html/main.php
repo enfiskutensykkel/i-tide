@@ -29,7 +29,16 @@ function monthyear($datestr)
 
 function getclass($hours)
 {
-    echo "";
+    $class = "";
+    if ($hours->hoursleft == 0)
+    {
+        $class = "text-warning";
+        if ($hours->minsleft <= 30)
+        {
+            $class = "text-danger";
+        }
+    }
+    echo $class;
 }
 
 function geturl($datestr)
@@ -243,6 +252,22 @@ endif; ?>
 <script type="text/javascript">
 $(document).ready(function () {
     var update = function (cb) {
+        var makeclass = function (timeleft) {
+            var time = timeleft.split(":");
+            var hours = parseInt(time[0]);
+            var mins = parseInt(time[1]);
+            
+            if (hours == 0) {
+                if (mins <= 30) {
+                    return "text-danger";
+                }
+
+                return "text-warning";
+            }
+
+            return "";
+        };
+
         var maketext = function (timeleft) {
             var time = timeleft.split(":");
             var hours = parseInt(time[0]);
@@ -251,8 +276,7 @@ $(document).ready(function () {
             var plural_mins = mins != 1 ? "er" : "";
             var plural_hours = hours != 1 ? "er" : "e";
 
-            if (hours > 0)
-            {
+            if (hours > 0) {
                 return hours + " tim" + plural_hours + " og " + mins + " minutt" + plural_mins;
             }
 
@@ -268,12 +292,14 @@ $(document).ready(function () {
 
                 if (beer && beer.timeleft) {
                     $("#beerleft").text(maketext(beer.remaining));
+                    $("#beer").removeClass("text-warning text-danger").addClass(makeclass(beer.remaining));
                 } else {
                     $("#beer").removeClass("text-warning text-danger").addClass("text-muted").text("Ølutsalget er stengt.");
                 }
 
                 if (wine && wine.timeleft) {
                     $("#wineleft").text(maketext(wine.remaining));
+                    $("#wine").removeClass("text-warning text-danger").addClass(makeclass(wine.remaining));
                 } else {
                     $("#wine").removeClass("text-warning text-danger").addClass("text-muted").text("Vinmonopolet er stengt.");
                 }

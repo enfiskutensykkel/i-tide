@@ -85,6 +85,7 @@ RewriteRule ^res/hours/(today|tomorrow)(\.(txt|xml|json))?/?$ rest.php?ctrl=hour
 
 # /
 RewriteRule ^$ html.php?view=month [L,NC,QSA]
+# TODO: fix calendar stuff and also support 2015-05-05 endpoints for calendar
 
 ### END ROUTES ###
 
