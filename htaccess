@@ -27,65 +27,40 @@ RewriteRule ^.*\.phps$ - [L]
 
 ### BEGIN ROUTES ###
 
-# TODO:
-# Date endpoints: /date /date/2015-05-05
-# Calendar endpoints: /calendar (default to current month) /calendar/2015 (year) /calendar/2015/february (month) /holidays /holidays/2015 /calendar/2015/42 (week)
-# API descriptor /resources
-# redirect index.htm and index.html to /calendar
-
-
-# /res/holidays
-RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
-RewriteRule ^res/holidays/([0-9]{4})(\.(txt|xml|json))?/?$ rest.php?ctrl=holidays&type=%1&view=$3&year=$1 [L,NC,QSA]
-
-RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
-RewriteRule ^res/holidays(\.(txt|xml|json))?/?$ rest.php?ctrl=holidays&type=%1&view=$2&year=0 [L,NC,QSA]
-
-# /res/hours
-RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
-RewriteRule ^res/hours/([0-9]{4})[\-/]([0-9]{1,2})[\-/]([0-9]{1,2})(\.(txt|xml|json))?/?$ rest.php?ctrl=hours&type=%1&view=$5&year=$1&month=$2&day=$3 [L,NC,QSA]
-
-RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
-RewriteRule ^res/hours/([0-9]{4})/(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/([0-9]{1,2})(\.(txt|xml|json))?/?$ rest.php?ctrl=hours&type=%1&view=$5&year=$1&month=$2&day=$3 [L,NC,QSA]
-
-# /res/status
-RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
-RewriteRule ^res/status(\.(txt|xml|json))?/?$ rest.php?ctrl=status&type=%1&view=$2 [L,NC,QSA]
-
-# /res/month and /calendar
-RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
-RewriteRule ^res/month(\.(txt|xml|json))?/?$ rest.php?ctrl=month&type=%1&view=$2&year=0&month=0 [L,NC,QSA]
-RewriteRule ^calendar(\.html)?/?$ html.php?view=month&year=0&month=0&day=0 [L,NC,QSA]
-
-RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
-RewriteRule ^res/month/([0-9]{4})/([0-9]{1,2}|january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)(\.(txt|xml|json))?/?$ rest.php?ctrl=month&type=%1&view=$4&year=$1&month=$2 [L,NC,QSA]
-
-RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
-RewriteRule ^res/month/([0-9]{4})-([0-9]{1,2})(\.(txt|xml|json))?/?$ rest.php?ctrl=month&type=%1&view=$4&year=$1&month=$2 [L,NC,QSA]
-## TODO calendar
-
-RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
-RewriteRule ^res/month/([0-9]{1,2}|january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)(\.(txt|xml|json))?/?$ rest.php?ctrl=month&type=%1&view=$3&year=0&month=$1 [L,NC,QSA]
-# TODO calendar
-
-# /res/resources
+# API description
 RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
 RewriteRule ^resources(\.(txt|xml|json))?/?$ rest.php?ctrl=resources&type=%1&view=$2 [L,NC,QSA]
 
-# Short form of hours, redirect to hours
-RewriteRule ^res/today(.*)$ /jonassm/i-tide/res/status$1 [R=301,L,NC]
-RewriteRule ^res/tomorrow(.*)$ /jonassm/i-tide/res/hours/$2 [R=301,L,NC]
-#RewriteRule ^res/([0-9]{4})[\-/]([01][0-9])[\-/]([0-3][0-9])(.*)$ /jonassm/i-tide/res/hours/$1-$2-$3$4 [R=301,L,NC]
-
+# Current status
 RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
-RewriteRule ^res/hours(\.(txt|xml|json))?/?$ rest.php?ctrl=hours&type=%1&view=$2&year=0&month=0&day=&0&override=today [L,NC,QSA]
-
+RewriteRule ^status(\.(txt|xml|json))?/?$ rest.php?ctrl=status&type=%1&view=$2 [L,NC,QSA]
 RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
-RewriteRule ^res/hours/(today|tomorrow)(\.(txt|xml|json))?/?$ rest.php?ctrl=hours&type=%1&view=$3&year=0&month=0&day=0&override=$1 [L,NC,QSA]
+RewriteRule ^today(\.(txt|xml|json))?/?$ rest.php?ctrl=hours&type=%1&view=$2&year=0&month=0&day=0&override=today [L,NC,QSA]
+RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
+RewriteRule ^tomorrow(\.(txt|xml|json))?/?$ rest.php?ctrl=hours&type=%1&view=$2&year=0&month=0&day=0&override=tomorrow [L,NC,QSA]
 
-# /
+# Month
+RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
+RewriteRule ^month/([0-9]{4})-([0-9]{1,2})(-[0-9]{1,2})?(\.(txt|xml|json))?/?$ rest.php?ctrl=month&type=%1&view=$5&year=$1&month=$2 [L,NC,QSA]
+RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
+RewriteRule ^month(\.(txt|xml|json))?/?$ rest.php?ctrl=month&type=%1&view=$3&year=0&month=0 [L,NC,QSA]
+
+# Holiday list
+RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
+RewriteRule ^holidays(/([0-9]{4}))?(\.(txt|xml|json))?/?$ rest.php?ctrl=holidays&type=%1&view=$4&year=$2 [L,NC,QSA]
+
+# Opening hours
+RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
+RewriteRule ^(date|hours)/([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})(\.(txt|xml|json))?/?$ rest.php?ctrl=hours&type=%1&view=$6&year=$2&month=$3&day=$4 [L,NC,QSA]
+RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
+RewriteRule ^(date|hours)(\.(txt|xml|json))?/?$ rest.php?ctrl=hours&type=%1&view=$3&year=0&month=0&day=0&override=today [L,NC,QSA]
+
+# Calendar UI
+#RewriteRule ^(hours|date|month|calendar)/([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})(\.html)?/?$ html.php?view=month&year=$2&month=$3&day=$4 [L,NC,QSA]
+#RewriteRule ^(hours|date|month|calendar)(\.html)?/? html.php?view=month [L,NC,QSA]
+RewriteRule ^([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})(\.html)?/?$ html.php?view=month&year=$1&month=$2&day=$3 [L,NC,QSA]
+#RewriteRule ^index\.html/?$ html.php?view=month [L,NC,QSA]
 RewriteRule ^$ html.php?view=month [L,NC,QSA]
-# TODO: fix calendar stuff and also support 2015-05-05 endpoints for calendar
 
 ### END ROUTES ###
 

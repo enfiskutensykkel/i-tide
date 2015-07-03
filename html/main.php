@@ -41,13 +41,13 @@ function getclass($hours)
     echo $class;
 }
 
-function geturl($datestr)
+function makeurl($datestr)
 {
     $date = explode("-", $datestr);
     $year = $date[0];
     $month = $date[1];
     $day = $date[2];
-    echo "?year=$year&month=$month&day=$day";
+    echo BASE_URL."/$year-$month-$day";
 }
 
 function nextmonth($datestr, $url)
@@ -60,7 +60,14 @@ function nextmonth($datestr, $url)
     {
         ++$year;
     }
-    echo $url ? "?year=$year&month=$month&day=1" : MONTH_NAME($month);
+    if ($url)
+    {
+        printf(BASE_URL."/%04d-%02d-01", $year, $month);
+    }
+    else
+    {
+        echo MONTH_NAME($month);
+    }
 }
 
 function lastmonth($datestr, $url)
@@ -74,14 +81,22 @@ function lastmonth($datestr, $url)
         $month = 12;
         --$year;
     }
-    echo $url ? "?year=$year&month=$month&day=1" : MONTH_NAME($month);
+    
+    if ($url)
+    {
+        printf(BASE_URL."/%04d-%02d-01", $year, $month);
+    }
+    else
+    {
+        echo MONTH_NAME($month);
+    }
 }
 ?>
 <!DOCTYPE html>
 <html lang="no">
     <head>
-        <link rel="stylesheet" href="css/bootstrap.min.css" media="all"/>
-        <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+        <link rel="stylesheet" href="<? echo BASE_URL; ?>/css/bootstrap.min.css" media="all"/>
+        <script type="text/javascript" src="<? echo BASE_URL; ?>/js/jquery-1.11.3.min.js"></script>
         <style>
             td, tr { cursor: default; }
             td a, a:hover, a:link, a:visited, a:focus, a:active { text-decoration: none; color: inherit; display: block;}
@@ -199,7 +214,7 @@ $title .= $day->beer ? "&Oslash;lutsalg: ".$day->beer->open." - ".$day->beer->cl
 $title .= "&#13;";
 $title .= $day->wine ? "Vinmonopolet: ".$day->wine->open." - ".$day->wine->close : "Vinmonopolet: Stengt";
 ?>
-                                        <a href="<? geturl($day->date); ?>" title="<? fulldate($day->date, true, true); echo $title;?> ">
+                                        <a href="<? makeurl($day->date); ?>" title="<? fulldate($day->date, true, true); echo $title;?> ">
                                         <? echo date("j", strtotime($day->date)); ?>
                                     </a>
 <?
@@ -213,8 +228,8 @@ endif; ?>
                 </div>
                 <ul class="pager">
                     <li><a href="<? lastmonth($data->selected->date, true); ?>"><span aria-hidden="true">&larr;</span> <? lastmonth($data->selected->date, false); ?></a></li>
-                    <li><a href="<? geturl($data->today->date); ?>">I dag</a></li>
-                    <li><a href="<? geturl($data->tomorrow->date); ?>">I morgen</a></li>
+                    <li><a href="<? makeurl($data->today->date); ?>">I dag</a></li>
+                    <li><a href="<? makeurl($data->tomorrow->date); ?>">I morgen</a></li>
                     <li><a href="<? nextmonth($data->selected->date, true); ?>"><? nextmonth($data->selected->date, false); ?> <span aria-hidden="true">&rarr;</span></a></li>
               </ul>
             </div>
