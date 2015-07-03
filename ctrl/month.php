@@ -20,6 +20,7 @@ final class Month extends Controller
         $now = time();
 
         $view = new MonthView(Calendar::createForMonth($year, $month), $year, $month);
+        //$view = new MonthView(Calendar::createForCalendar($year, $month), $year, $month);
         parent::registerXmlView($view);
         parent::registerJsonView($view);
         parent::registerTextView($view);

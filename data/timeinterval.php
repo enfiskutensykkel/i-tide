@@ -73,6 +73,10 @@ final class TimeInterval implements Iterator, ArrayAccess
     {
         $firstInMonth = mktime(0, 0, 0, $month, 1, $year);
         $offset = date("w", $firstInMonth) - 1;
+        if ($offset == -1) 
+        {
+            $offset = 6;
+        }
         $first = strtotime("-$offset days", $firstInMonth);
 
         $lastInMonth = mktime(0, 0, 0, $month, date('t', $firstInMonth), $year);

@@ -299,7 +299,7 @@ $(document).ready(function () {
         };
 
         $.ajax({
-            url: '<? echo BASE_URL; ?>/res/status',
+            url: '<? echo BASE_URL; ?>/status',
             dataType: 'json',
             success: function (data) {
                 var beer = data.status.beer;
