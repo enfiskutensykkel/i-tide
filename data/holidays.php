@@ -14,8 +14,7 @@ final class Holidays
     const EVE = 3;
     const HOLIDAY = 4;
 
-    private $election_date;
-    private $election_type;
+    private $year;
     private $other;
     private $eves;
     private $holidays;
@@ -27,6 +26,7 @@ final class Holidays
     private function __construct($year)
     {
         $easter = easter_date($year);
+        $this->year = $year;
 
         $this->holidays = array(
             mktime(0, 0, 0, 1, 1, $year)        => '1. nyttårsdag',
@@ -53,17 +53,6 @@ final class Holidays
             mktime(0, 0, 0, 5, 17, $year)       => 'Grunnlovsdag',
             strtotime('+39 days', $easter)      => 'Kristi himmelfartsdag'
         );
-
-        $this->election_date = $this->election_type = null;
-        foreach (self::$elections as $date => $type)
-        {
-            if (date('Y', $date) == $year)
-            {
-                $this->election_date = $date;
-                $this->election_type = $type;
-                break; // Maximum one election per year
-            }
-        }
     }
 
     // Creating dates from strtotime is heavy but convenient
@@ -114,9 +103,9 @@ final class Holidays
             return $this->other[$date];
         }
 
-        if ($date != null && $date == $this->election_date)
+        if (array_key_exists($date, self::$elections))
         {
-            return $this->election_type;
+            return self::$elections[$date];
         }
 
         return null;
@@ -139,7 +128,7 @@ final class Holidays
             return self::OTHER;
         }
 
-        if ($date != null && $date == $this->election_date)
+        if (array_key_exists($date, self::$elections))
         {
             return self::ELECTION;
         }
@@ -152,9 +141,13 @@ final class Holidays
         if ($this->aggregated == null)
         {
             $this->aggregated = $this->holidays + $this->eves + $this->other;
-            if ($this->election_date != null)
+
+            foreach (self::$elections as $date => $type)
             {
-                $this->aggregated += array($this->election_date => $this->election_type);
+                if (date('Y', $date) == $this->year)
+                {
+                    $this->aggregated += array($date => $type);
+                }
             }
             ksort($this->aggregated);
         }
