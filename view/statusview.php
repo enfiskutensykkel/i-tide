@@ -88,7 +88,8 @@ final class StatusView extends View
         {
             $note = (object) array(
                 'date' => DateInfo::formatDate($this->note->getDate()),
-                'info' => $this->note->getDateInfo()
+                'info' => $this->note->getDateInfo(),
+                'next' => DateInfo::formatDate($this->note->getNextPossible()->getDate())
             );
         }
 

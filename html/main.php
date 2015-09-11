@@ -118,7 +118,7 @@ function lastmonth($datestr, $url)
             <div id="alert-area">
 <? if ($data->today->note != null) : ?>
                 <div role="alert" class="alert alert-warning">
-                    <strong>Merk!</strong> <? fulldate($data->today->note->date, false, true); ?> er <? echo strtolower($data->today->note->info); ?>. Utsalget er stengt frem til <? fulldate($data->today->hours->next->dateinfo->date, false, true, true); ?>.
+                    <strong>Merk!</strong> <? fulldate($data->today->note->date, false, true); ?> er <? echo strtolower($data->today->note->info); ?>. Utsalget er stengt frem til <? fulldate($data->today->note->next, false, true, true); ?>.
                 </div>
 <? endif; ?>
             </div>

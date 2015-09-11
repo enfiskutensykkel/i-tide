@@ -42,7 +42,7 @@ final class CalendarView extends View
                 'wine' => $dateinfo->dateinfo->wine,
                 'info' => $dateinfo->dateinfo->description,
                 'mark' => $hours->isHoliday() || $hours->isSunday(),
-                'warn' => $hours->isDayBeforeHoliday(false),
+                'warn' => $hours->isDayBeforeHoliday(false) || $hours->isElectionDay(),
                 'part' => date('m', $hours->getDate()) == $month
             );
         }
