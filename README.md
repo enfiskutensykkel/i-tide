@@ -8,7 +8,7 @@ original idea and implemented a nifty calendar app to help me keep track of
 the sales hours.
 
 However, the original app proved hard to maintain and wasn't really flexible, 
-and since I wanted to to a micro web framework in PHP for fun, I made this new
+and since I wanted to do a micro web framework in PHP for fun, I made this new
 RESTy back-end. It's a overkill for something as simple, but it is a fun toy
 project as I don't get a lot of time to do web development any more. 
 
@@ -21,14 +21,15 @@ The application is running here: http://heim.ifi.uio.no/jonassm/i-tide/
 Please note that it isn't quite finished yet, as seen in the following
 TODO list:
  - [x] REST-like back-end
-   - [x] Status view (`/res/status`)
-   - [ ] ~~Time left (`/res/timeleft`)~~ Included in status.
-   - [x] Sales hours (`/res/hours/[YYYY-MM-DD|today|tomorrow]`)
-   - [x] Holidays list (`/res/holidays/[YYYY]`)
-   - [x] Month view (`/res/month/[YYYY-MM]`)
-   - [ ] Week view (`/res/week/[YYYY-<weeknumber>]`)
-   - [ ] ~~Upcoming (`/res/upcoming/[YYYY-MM-DD|today|tomorrow]`)~~ Included in status.
-   - [x] API descriptor view (`/res/resources`)
+   - [x] Status view (`/status`)
+   - [ ] ~~Time left (`/timeleft`)~~ Included in status.
+   - [x] Sales hours (`/hours/[YYYY-MM-DD]`)
+   	- [x] Shorthand for today and tomorrow (`/today` and `/tomorrow`)
+   - [x] Holidays list (`/holidays/[YYYY]`)
+   - [x] Month view (`/month/[YYYY-MM]`)
+   - [ ] Week view (`/week/[YYYY-<weeknumber>]`)
+   - [ ] ~~Upcoming (`/upcoming/[YYYY-MM-DD]`)~~ Included in status.
+   - [x] API descriptor view (`/resources`)
  - [x] Calendar UI (front-end)
    - [x] Bootstrap CSS
    - [ ] ~~Responsive design~~ I thought Bootstrap CSS would do this for me; apparently not so well
@@ -39,7 +40,7 @@ TODO list:
    - [ ] Error logging
  - [ ] Flexible deployment script
    - [ ] Dynamic configuration of routes
-   - [ ] Symbolic link creation
+   - [x] Symbolic link creation
    - [ ] `.htaccess` generation
  - [ ] Security testing
    - [ ] Direct file access
@@ -130,6 +131,6 @@ Deployment
 I've written this specifically for the environment I'm hosted on, so I
 imagine getting it to work on your own web server might take some work.
 Feel free to ask me if you need information about web server configuration.
-modi\_php configuration and so on, and I'll try to answer them. It's not my
+mod\_php configuration and so on, and I'll try to answer them. It's not my
 personal server, but hosted on the university's servers, so that's why my 
 choices were limited.
