@@ -6,6 +6,9 @@ final class ResourcesInfo extends View
 {
     public function asJson(ResourceInfo &$resource)
     {
+        $output = array();
+        preg_match_all('/\.?\/?(\S+)/', shell_exec("find ./ -type f -name \"*.php\""), $output);
+
         return (object) array(
             'version' => VERSION,
             'url' => $resource->resource->getResourceUrl(),
@@ -26,7 +29,8 @@ final class ResourcesInfo extends View
                     'type' => "interval",
                     'url' => $resource->resource->createResourceUrl('ctrl\Month')
                 ),
-            )
+            ),
+            'files' => array_map(function ($elem) { return BASE_URL."/".$elem."s"; }, $output[1]),
         );
     }
 
@@ -46,6 +50,14 @@ final class ResourcesInfo extends View
             $ep->setAttribute("url", $endpoint->url);
             $root->appendChild($ep);
         }
+
+        $filelist = $xml->createElement("files");
+        foreach ($json->files as $file)
+        {
+            $fileNode = $xml->createElement("file", $file);
+            $filelist->appendChild($fileNode);
+        }
+        $root->appendChild($filelist);
 
         return $root;
     }
