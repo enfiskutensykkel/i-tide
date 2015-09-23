@@ -17,12 +17,13 @@ The name _i tide_ is Norwegian for _in time_.
 Acknowledgements
 ----------------
 A special thanks to Nikolai Luthman (nuth) for his IRC bot and giving me the
-idea for making a web app.
+idea for making this into a web app.
 
 Thanks to the guys at the IRC channel #ifi-core and #ifi@uio for feedback,
-testing, bug finding and so on.
+feature requests, testing, bug finding and so on. Without these people actually 
+using it, I wouldn't have found even a fraction of the bugs.
 
-I would also like to thank Thomas Misund and Helge Brekke for the name.
+I would also like to thank Thomas Misund and Helge Brekke for the idea for the name.
 
 Current status
 --------------
