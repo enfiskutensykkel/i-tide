@@ -7,7 +7,9 @@ final class ResourcesInfo extends View
     public function asJson(ResourceInfo &$resource)
     {
         $output = array();
-        preg_match_all('/\.?\/?(\S+)/', shell_exec("find ./ -type f -name \"*.php\""), $output);
+        preg_match_all('/\.?\/?(\S+)/', shell_exec("find ./ -type l -name \"*.phps\""), $output);
+        $output[1][] = "README";
+        $output[1][] = "LICENSE";
 
         return (object) array(
             'version' => VERSION,
@@ -30,7 +32,7 @@ final class ResourcesInfo extends View
                     'url' => $resource->resource->createResourceUrl('ctrl\Month')
                 ),
             ),
-            'files' => array_map(function ($elem) { return BASE_URL."/".$elem."s"; }, $output[1]),
+            'files' => array_map(function ($elem) { return BASE_URL."/".$elem; }, $output[1]),
         );
     }
 

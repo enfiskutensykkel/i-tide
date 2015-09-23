@@ -106,7 +106,7 @@ function lastmonth($datestr, $url)
         <meta charset="UTF-8">
         <meta name="description" content="En oversikt over utsalgstidene for alkohol">
         <meta name="author" content="Jonas Markussen">
-        <meta name="keywords" content="øl, vin, vinmonopol, ølsalg, alkohol, olsalg, ol, vinmonopolet, butikk, utsalgstider">
+        <meta name="keywords" content="øl, vin, vinmonopol, ølsalg, alkohol, vinmonopolet, butikktider, øl i butikk, butikk, utsalgstider, utsalg, ølutsalg, ølutsalgstider, ølsalgstider">
         <meta name="robots" content="NOARCHIVE, NOODP">
     </head>
     <body>

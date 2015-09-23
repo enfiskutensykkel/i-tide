@@ -14,6 +14,14 @@ project as I don't get a lot of time to do web development any more.
 
 The name _i tide_ is Norwegian for _in time_.
 
+Acknowledgements
+----------------
+A special thanks to Nikolai Luthman (nuth) for the main idea. 
+Thanks to the guys at the IRC channel #ifi-core and #ifi@uio for feedback,
+testing, bug finding and so on.
+
+I would also like to thank Thomas Misund and Helge Brekke for the name.
+
 Current status
 --------------
 The application is running here: http://heim.ifi.uio.no/jonassm/i-tide/
@@ -46,6 +54,8 @@ TODO list:
    - [ ] Direct file access
    - [ ] Request injection
 
+*NB!* Note that the times are currently only valid for Oslo. I might add support 
+other municipalities at a later point in time (but I wouldn't count on it).
 
 Calendar UI
 -----------

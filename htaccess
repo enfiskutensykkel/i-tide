@@ -22,6 +22,8 @@ RewriteRule .* - [L]
 RewriteRule ^css/.*$ - [L]
 RewriteRule ^js/.*$ - [L]
 RewriteRule ^.*\.phps$ - [L]
+RewriteRule ^README$ - [L]
+RewriteRule ^LICENSE$ - [L]
 #RewriteCond %{REQUEST_FILENAME} -f
 #RewriteRule .* - [R=404,L]
 
