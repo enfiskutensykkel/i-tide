@@ -57,7 +57,7 @@ TODO list:
    - [ ] Direct file access
    - [ ] Request injection
 
-*NB!* Note that the times are currently only valid for Oslo. I might add support 
+**NB!** Note that the times are currently only valid for Oslo. I might add support 
 other municipalities at a later point in time (but I wouldn't count on it).
 
 Calendar UI
