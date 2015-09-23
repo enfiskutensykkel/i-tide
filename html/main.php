@@ -99,14 +99,14 @@ function lastmonth($datestr, $url)
         <script type="text/javascript" src="<? echo BASE_URL; ?>/js/jquery-1.11.3.min.js"></script>
         <style>
             td, tr { cursor: default; }
-            td a, a:hover, a:link, a:visited, a:focus, a:active { text-decoration: none; color: inherit; display: block;}
+            td a, td a:hover, td a:link, td a:visited, td a:focus, td a:active { text-decoration: none; color: inherit; display: block;}
         </style>
 
         <title>Utsalgstider for alkohol</title>
         <meta charset="UTF-8">
         <meta name="description" content="En oversikt over utsalgstidene for alkohol">
         <meta name="author" content="Jonas Markussen">
-        <meta name="keywords" content="øl, vin, vinmonopol, ølsalg, alkohol">
+        <meta name="keywords" content="øl, vin, vinmonopol, ølsalg, alkohol, olsalg, ol, vinmonopolet, butikk, utsalgstider">
         <meta name="robots" content="NOARCHIVE, NOODP">
     </head>
     <body>

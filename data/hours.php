@@ -48,7 +48,7 @@ final class Hours
 
     public function getWineHours()
     {
-        if ($this->sunday || $this->today_type != Holidays::NOTHING)
+        if ($this->sunday || ($this->today_type != Holidays::NOTHING && $this->today_type != Holidays::ELECTION))
         {
             // Sunday or any non-regular day (holidays, "eves", election day, other special days)
             return null;
@@ -74,7 +74,7 @@ final class Hours
 
     public function getBeerHours()
     {
-        if ($this->isHoliday() || $this->isElectionDay())
+        if ($this->isHoliday() /*|| $this->isElectionDay() */)
         {
             // Sunday or holiday
             return null;
@@ -144,7 +144,7 @@ final class Hours
     {
         $date = new Hours($this->tomorrow);
 
-        while ($date->isHoliday() || $date->isElectionDay())
+        while ($date->isHoliday() /*|| $date->isElectionDay() */)
         {
             $date = new Hours($date->tomorrow);
         }
