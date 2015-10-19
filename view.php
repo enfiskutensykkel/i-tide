@@ -7,8 +7,16 @@ final class ResourceInfo
 {
     public function __construct(Controller &$resource)
     {
-        $this->resource = $resource;
+        $this->resource = $resource; // TODO: Remove this
         $this->name = $resource->getResourceName();
+
+        $this->getUrl = function () use (&$resource) {
+            return $resource->getResourceUrl(func_get_args());
+        };
+
+        $this->createUrl = function () use (&$resource) {
+            return $resource->createResourceUrl(func_get_args());
+        };
     }
 
     public function __get($property)

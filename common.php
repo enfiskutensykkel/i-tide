@@ -1,6 +1,6 @@
 <?
 define('DEBUG', true);
-define('VERSION', "1.0");
+define('VERSION', "0.1-beta");
 define('BASE_URL', "/jonassm/i-tide");
 require_once( 'errors.php' );
 

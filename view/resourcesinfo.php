@@ -4,35 +4,31 @@ use \DOMDocument;
 
 final class ResourcesInfo extends View
 {
+    private $files = null;
+    private $resources = null;
+
+    public function __construct($resources, $files)
+    {
+        $this->files = $files;
+        $this->resources = $resources;
+    }
+
     public function asJson(ResourceInfo &$resource)
     {
-        $output = array();
-        preg_match_all('/\.?\/?(\S+)/', shell_exec("find ./ -type l -name \"*.phps\""), $output);
-        $output[1][] = "README";
-        $output[1][] = "LICENSE";
+        $endpoints = array();
+        foreach ($this->resources as $ctrl => $type)
+        {
+            $endpoints[] = (object) array(
+                'type' => $type,
+                'url' => $resource->resource->createResourceUrl($ctrl)
+            );
+        }
 
         return (object) array(
             'version' => VERSION,
             'url' => $resource->resource->getResourceUrl(),
-            'resources' => array(
-                (object) array(
-                    'type' => "status",
-                    'url' => $resource->resource->createResourceUrl('ctrl\Status')
-                ),
-                (object) array(
-                    'type' => "saleshours",
-                    'url' => $resource->resource->createResourceUrl('ctrl\Hours')
-                ),
-                (object) array(
-                    'type' => "interval",
-                    'url' => $resource->resource->createResourceUrl('ctrl\Holidays')
-                ),
-                (object) array(
-                    'type' => "interval",
-                    'url' => $resource->resource->createResourceUrl('ctrl\Month')
-                ),
-            ),
-            'files' => array_map(function ($elem) { return BASE_URL."/".$elem; }, $output[1]),
+            'resources' => $endpoints,
+            'files' => $this->files
         );
     }
 
