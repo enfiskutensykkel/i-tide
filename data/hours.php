@@ -48,7 +48,12 @@ final class Hours
 
     public function getWineHours()
     {
-        if ($this->sunday || ($this->today_type != Holidays::NOTHING && $this->today_type != Holidays::ELECTION))
+        if ($this->sunday)
+        {
+            return null;
+        }
+        
+        if ($this->today_type != Holidays::NOTHING && $this->today_type != Holidays::ELECTION)
         {
             // Sunday or any non-regular day (holidays, "eves", election day, other special days)
             if ($this->today_type != Holidays::NEWYEARS_EVE)
