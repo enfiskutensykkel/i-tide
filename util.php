@@ -1,4 +1,4 @@
-<?
+<?php
 /* I would have put these functions in a util namespace, but the version
  * of PHP this server is running does not handle functions in namespaces
  * all that well.

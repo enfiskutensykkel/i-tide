@@ -1,4 +1,4 @@
-<?
+<?php
 require_once( 'common.php' );
 require_once( 'mime.php' );
 require_once( 'util.php' );

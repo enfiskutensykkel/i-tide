@@ -1,4 +1,4 @@
-<?
+<?php
 namespace view;
 use data\Hours;
 use view\HoursView;

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace data;
 use \Iterator;
 

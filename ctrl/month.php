@@ -1,4 +1,4 @@
-<?
+<?php
 namespace ctrl;
 use data\TimeInterval as Calendar;
 use data\Hours as Day;

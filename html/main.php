@@ -1,4 +1,4 @@
-<?
+<?php
 function maketimeleft($timeleft)
 {
     $hours = $timeleft->hoursleft != 1 ? "timer" : "time";
@@ -95,8 +95,8 @@ function lastmonth($datestr, $url)
 <!DOCTYPE html>
 <html lang="no">
     <head>
-        <link rel="stylesheet" href="<? echo BASE_URL; ?>/css/bootstrap.min.css" media="all"/>
-        <script type="text/javascript" src="<? echo BASE_URL; ?>/js/jquery-1.11.3.min.js"></script>
+        <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/bootstrap.min.css" media="all"/>
+        <script type="text/javascript" src="<?php echo BASE_URL; ?>/js/jquery-1.11.3.min.js"></script>
         <style>
             td, tr { cursor: default; }
             td a, td a:hover, td a:link, td a:visited, td a:focus, td a:active { text-decoration: none; color: inherit; display: block;}
@@ -116,11 +116,11 @@ function lastmonth($datestr, $url)
             </div>
 
             <div id="alert-area">
-<? if ($data->today->note != null) : ?>
+<?php if ($data->today->note != null) : ?>
                 <div role="alert" class="alert alert-warning">
-                    <strong>Merk!</strong> <? fulldate($data->today->note->date, false, true); ?> er <? echo strtolower($data->today->note->info); ?>. Utsalget er stengt frem til <? fulldate($data->today->note->next, false, true, true); ?>.
+                    <strong>Merk!</strong> <?php fulldate($data->today->note->date, false, true); ?> er <?php echo strtolower($data->today->note->info); ?>. Utsalget er stengt frem til <?php fulldate($data->today->note->next, false, true, true); ?>.
                 </div>
-<? endif; ?>
+<?php endif; ?>
             </div>
 
             <div id="notification" class="well well-lg" style="min-width: 500px;">
@@ -128,51 +128,51 @@ function lastmonth($datestr, $url)
                     <div class="col-xs-6">
                         <h2>
                             I dag
-                            <small class="text-nowrap"><? fulldate($data->today->date); ?></small>
+                            <small class="text-nowrap"><?php fulldate($data->today->date); ?></small>
                         </h2>
-<? if ($data->today->beer) : ?>
-                        <p id="beer" class="<? getclass($data->today->beer); ?>">
-                            <strong id="beerleft" class="text-nowrap"><? maketimeleft($data->today->beer); ?></strong> til &oslash;lsalget stenger.
+<?php if ($data->today->beer) : ?>
+                        <p id="beer" class="<?php getclass($data->today->beer); ?>">
+                            <strong id="beerleft" class="text-nowrap"><?php maketimeleft($data->today->beer); ?></strong> til &oslash;lsalget stenger.
                         </p>
-<? else : ?>
+<?php else : ?>
                         <p id="beer" class="text-muted">
                             &Oslash;lsalget er stengt.
                         </p>
-<? endif; ?>
+<?php endif; ?>
 
-<? if ($data->today->wine) : ?>
-                        <p id="wine" class="<? getclass($data->today->wine); ?>">
-                            <strong id="wineleft" class="text-nowrap"><? maketimeleft($data->today->wine); ?></strong> til vinmonopolet stenger.
+<?php if ($data->today->wine) : ?>
+                        <p id="wine" class="<?php getclass($data->today->wine); ?>">
+                            <strong id="wineleft" class="text-nowrap"><?php maketimeleft($data->today->wine); ?></strong> til vinmonopolet stenger.
                         </p>
-<? else : ?>
+<?php else : ?>
                         <p id="wine" class="text-muted">
                             Vinmonopolet er stengt.
                         </p>
-<? endif; ?>
+<?php endif; ?>
                     </div>
                     <div class="col-xs-6">
                         <h2>
                             I morgen
-                            <small class="text-nowrap"><? fulldate($data->tomorrow->date); ?></small>
+                            <small class="text-nowrap"><?php fulldate($data->tomorrow->date); ?></small>
                         </h2>
-<? if ($data->tomorrow->beer) : ?>
-                        <p>&Oslash;lsalget er &aring;pent fra <? echo $data->tomorrow->beer->open; ?> til <? echo $data->tomorrow->beer->close ?>.</p>
-<? else : ?>
+<?php if ($data->tomorrow->beer) : ?>
+                        <p>&Oslash;lsalget er &aring;pent fra <?php echo $data->tomorrow->beer->open; ?> til <?php echo $data->tomorrow->beer->close ?>.</p>
+<?php else : ?>
                         <p class="text-muted">&Oslash;lsalget er stengt.</p>
-<? endif; ?>
+<?php endif; ?>
 
-<? if ($data->tomorrow->wine) : ?>
-                        <p>Vinmonopolet er &aring;pent fra <? echo $data->tomorrow->wine->open; ?> til <? echo $data->tomorrow->wine->close ?>.</p>
-<? else : ?>
+<?php if ($data->tomorrow->wine) : ?>
+                        <p>Vinmonopolet er &aring;pent fra <?php echo $data->tomorrow->wine->open; ?> til <?php echo $data->tomorrow->wine->close ?>.</p>
+<?php else : ?>
                         <p class="text-muted">Vinmonopolet er stengt.</p>
-<? endif; ?>
+<?php endif; ?>
                     </div>
                 </div>
             </div>
 
             <div class="container" style="min-width: 500px; max-width: 500px;">
                 <div id="calendar" class="panel panel-primary">
-                    <div class="panel-heading"><h1 class="panel-title"><? monthyear($data->selected->date); ?></h1></div>
+                    <div class="panel-heading"><h1 class="panel-title"><?php monthyear($data->selected->date); ?></h1></div>
                     <table class="table table-bordered table-condensed table-striped">
                         <thead>
                             <tr>
@@ -187,77 +187,77 @@ function lastmonth($datestr, $url)
                             </tr>
                         </thead>
                         <tbody>
-<? foreach ($data->calendar as $idx => $day) : ?>
-<? if ($idx % 7 == 0) : ?>
-<? if ($idx > 0) : ?>
+<?php foreach ($data->calendar as $idx => $day) : ?>
+<?php if ($idx % 7 == 0) : ?>
+<?php if ($idx > 0) : ?>
                             </tr>
-<? endif; ?>
+<?php endif; ?>
                             <tr>
-                                <th class="text-center text-nowrap"><? echo date("W", strtotime($day->date)); ?></th>
-<? endif; ?>
+                                <th class="text-center text-nowrap"><?php echo date("W", strtotime($day->date)); ?></th>
+<?php endif; ?>
 
-<? 
+<?php 
 $bgclass = $day->warn ? "text-warning" : "";
 $bgclass = $day->mark ? "text-danger" : $bgclass;
 $bgclass = $day->date == $data->today->date ? "bg-info" : $bgclass; 
 $bgclass = $day->date == $data->selected->date ? "bg-primary" : $bgclass;
 ?>
 
-                                <td class="<? echo $bgclass; ?> text-nowrap text-center">
-<? if (!$day->part) : ?>
+                                <td class="<?php echo $bgclass; ?> text-nowrap text-center">
+<?php if (!$day->part) : ?>
                                     <span class="text-muted">
-                                        <? echo date("j", strtotime($day->date)); ?>
+                                        <?php echo date("j", strtotime($day->date)); ?>
                                     </span>
-<? else : 
+<?php else : 
 $title = "&#13;";
 $title .= $day->beer ? "&Oslash;lutsalg: ".$day->beer->open." - ".$day->beer->close : "&Oslash;lutsalg: Stengt";
 $title .= "&#13;";
 $title .= $day->wine ? "Vinmonopolet: ".$day->wine->open." - ".$day->wine->close : "Vinmonopolet: Stengt";
 ?>
-                                        <a href="<? makeurl($day->date); ?>" title="<? fulldate($day->date, true, true); echo $title;?> ">
-                                        <? echo date("j", strtotime($day->date)); ?>
+                                        <a href="<?php makeurl($day->date); ?>" title="<?php fulldate($day->date, true, true); echo $title;?> ">
+                                        <?php echo date("j", strtotime($day->date)); ?>
                                     </a>
-<?
+<?php
 unset($title);
 endif; ?>
                                 </td>
-<? endforeach; ?>
+<?php endforeach; ?>
                             </tr>
                         </tbody>
                     </table>
                 </div>
                 <ul class="pager">
-                    <li><a href="<? lastmonth($data->selected->date, true); ?>"><span aria-hidden="true">&larr;</span> <? lastmonth($data->selected->date, false); ?></a></li>
-                    <li><a href="<? makeurl($data->today->date); ?>">I dag</a></li>
-                    <li><a href="<? makeurl($data->tomorrow->date); ?>">I morgen</a></li>
-                    <li><a href="<? nextmonth($data->selected->date, true); ?>"><? nextmonth($data->selected->date, false); ?> <span aria-hidden="true">&rarr;</span></a></li>
+                    <li><a href="<?php lastmonth($data->selected->date, true); ?>"><span aria-hidden="true">&larr;</span> <?php lastmonth($data->selected->date, false); ?></a></li>
+                    <li><a href="<?php makeurl($data->today->date); ?>">I dag</a></li>
+                    <li><a href="<?php makeurl($data->tomorrow->date); ?>">I morgen</a></li>
+                    <li><a href="<?php nextmonth($data->selected->date, true); ?>"><?php nextmonth($data->selected->date, false); ?> <span aria-hidden="true">&rarr;</span></a></li>
               </ul>
             </div>
 
             <div class="container" style="min-width: 500px;">
                 <div id="info" class="panel panel-default">
-                    <div class="panel-heading"><h1 class="panel-title"><? fulldate($data->selected->date, true, true); ?></h1></div>
+                    <div class="panel-heading"><h1 class="panel-title"><?php fulldate($data->selected->date, true, true); ?></h1></div>
                     <div class="panel-body">
-<? if ($data->selected->info) : ?>
+<?php if ($data->selected->info) : ?>
                         <p>
-                            <strong><? echo $data->selected->info; ?></strong>
+                            <strong><?php echo $data->selected->info; ?></strong>
                         </p>
-<? endif; ?>
+<?php endif; ?>
 
-<? if ($data->selected->beer) : ?>
-                        <p>&Oslash;lsalget er &aring;pent fra <? echo $data->selected->beer->open; ?> til <? echo $data->selected->beer->close; ?>.</p>
-<? else : ?>
+<?php if ($data->selected->beer) : ?>
+                        <p>&Oslash;lsalget er &aring;pent fra <?php echo $data->selected->beer->open; ?> til <?php echo $data->selected->beer->close; ?>.</p>
+<?php else : ?>
                         <p>&Oslash;lsalget er stengt.</p>
-<? endif; ?>
+<?php endif; ?>
 
-<? if ($data->selected->wine) : ?>
-                        <p>Vinmonopolet er &aring;pent fra <? echo $data->selected->wine->open; ?> til <? echo $data->selected->wine->close; ?>.</p>
-<? else : ?>
+<?php if ($data->selected->wine) : ?>
+                        <p>Vinmonopolet er &aring;pent fra <?php echo $data->selected->wine->open; ?> til <?php echo $data->selected->wine->close; ?>.</p>
+<?php else : ?>
                         <p>Vinmonopolet er stengt.</p>
-<? endif; ?>
+<?php endif; ?>
 
                         <p>
-                            Neste mulige er <? fulldate($data->selected->next, false, true, true); ?>
+                            Neste mulige er <?php fulldate($data->selected->next, false, true, true); ?>
                         </p>
                     </div>
                 </div>
@@ -299,7 +299,7 @@ $(document).ready(function () {
         };
 
         $.ajax({
-            url: '<? echo BASE_URL; ?>/status',
+            url: '<?php echo BASE_URL; ?>/status',
             dataType: 'json',
             success: function (data) {
                 var beer = data.status.beer;
@@ -326,9 +326,9 @@ $(document).ready(function () {
         });
     };
 
-<? if ($data->today->beer || $data->today->wine) : ?>
+<?php if ($data->today->beer || $data->today->wine) : ?>
     update(update);
-<? endif; ?>
+<?php endif; ?>
 });
 </script>
     </body>

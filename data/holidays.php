@@ -1,4 +1,4 @@
-<?
+<?php
 namespace data;
 use data\HolidaysIterator;
 
@@ -12,11 +12,13 @@ final class Holidays
     const ELECTION = 1;
     const OTHER = 2;
     const EVE = 3;
-    const HOLIDAY = 4;
+    const NEWYEARS_EVE = 4;
+    const HOLIDAY = 5;
 
     private $year;
     private $other;
     private $eves;
+    private $newyear;
     private $holidays;
     private $aggregated = null;
 
@@ -45,6 +47,9 @@ final class Holidays
             strtotime('-1 day', $easter)        => 'Påskeaften',
             strtotime('+48 days', $easter)      => 'Pinseaften',
             mktime(0, 0, 0, 12, 24, $year)      => 'Julaften',
+        );
+
+        $this->newyear = array(
             mktime(0, 0, 0, 12, 31, $year)      => 'Nyttårsaften'
         );
 
@@ -123,6 +128,11 @@ final class Holidays
             return self::EVE;
         }
 
+        if (array_key_exists($date, $this->newyear))
+        {
+            return self::NEWYEARS_EVE;
+        }
+
         if (array_key_exists($date, $this->other))
         {
             return self::OTHER;
@@ -140,7 +150,7 @@ final class Holidays
     {
         if ($this->aggregated == null)
         {
-            $this->aggregated = $this->holidays + $this->eves + $this->other;
+            $this->aggregated = $this->holidays + $this->eves + $this->newyear + $this->other;
 
             foreach (self::$elections as $date => $type)
             {

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace data;
 use data\Holidays;
 
@@ -51,7 +51,10 @@ final class Hours
         if ($this->sunday || ($this->today_type != Holidays::NOTHING && $this->today_type != Holidays::ELECTION))
         {
             // Sunday or any non-regular day (holidays, "eves", election day, other special days)
-            return null;
+            if ($this->today_type != Holidays::NEWYEARS_EVE)
+            {
+                return null;
+            }
         }
 
         if ($this->isDayBeforeHoliday())
@@ -79,7 +82,7 @@ final class Hours
             // Sunday or holiday
             return null;
         }
-        else if ($this->today_type == Holidays::EVE)
+        else if ($this->today_type == Holidays::EVE || $this->today_type == Holidays::NEWYEARS_EVE)
         {
             // One of the "eves"
             return (object) array(

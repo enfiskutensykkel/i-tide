@@ -1,4 +1,4 @@
-<?
+<?php
 namespace ctrl;
 use view\HolidaysView as View;
 use data\Holidays as Model;

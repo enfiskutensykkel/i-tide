@@ -1,4 +1,4 @@
-<?
+<?php
 namespace ctrl;
 use view\View;
 use view\ResourceInfo;

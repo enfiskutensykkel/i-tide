@@ -1,4 +1,4 @@
-<?
+<?php
 namespace view;
 use \DOMDocument;
 use ctrl\Hours;

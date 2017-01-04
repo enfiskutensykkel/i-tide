@@ -1,4 +1,4 @@
-<?
+<?php
 define('DEBUG', true);
 define('VERSION', "0.1-beta");
 define('BASE_URL', "/jonassm/i-tide");

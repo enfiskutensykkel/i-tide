@@ -1,4 +1,4 @@
-<?
+<?php
 namespace view;
 use view\MonthView;
 use view\StatusView;

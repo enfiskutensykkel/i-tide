@@ -1,4 +1,4 @@
-<?
+<?php
 
 define( 'MIME_TYPE_ALL', "*/*" );
 define( 'MIME_TYPE_APP_JSON', "application/json" );

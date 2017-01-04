@@ -1,4 +1,4 @@
-<?
+<?php
 namespace view;
 use ctrl\Controller;
 use \NotImplemented;

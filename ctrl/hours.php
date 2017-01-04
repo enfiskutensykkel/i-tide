@@ -1,4 +1,4 @@
-<?
+<?php
 namespace ctrl;
 use data\Hours as Model;
 use view\HoursView as View;

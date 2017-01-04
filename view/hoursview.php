@@ -1,4 +1,4 @@
-<?
+<?php
 namespace view;
 use view\DateInfo;
 use \DOMDocument;

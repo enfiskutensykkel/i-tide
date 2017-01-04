@@ -1,4 +1,4 @@
-<?
+<?php
 namespace data;
 use data\Hours;
 use \Iterator;
