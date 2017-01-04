@@ -45,7 +45,7 @@ RewriteRule ^tomorrow(\.(txt|xml|json))?/?$ rest.php?ctrl=hours&type=%1&view=$2&
 RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
 RewriteRule ^month/([0-9]{4})-([0-9]{1,2})(-[0-9]{1,2})?(\.(txt|xml|json))?/?$ rest.php?ctrl=month&type=%1&view=$5&year=$1&month=$2 [L,NC,QSA]
 RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
-RewriteRule ^month(\.(txt|xml|json))?/?$ rest.php?ctrl=month&type=%1&view=$3&year=0&month=0 [L,NC,QSA]
+RewriteRule ^month(\.(txt|xml|json))?/?$ rest.php?ctrl=month&type=%1&view=$2&year=0&month=0 [L,NC,QSA]
 
 # Holiday list
 RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
