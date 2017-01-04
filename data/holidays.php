@@ -103,6 +103,11 @@ final class Holidays
             return $this->eves[$date];
         }
 
+        if (array_key_exists($date, $this->newyear))
+        {
+            return $this->newyear[$date];
+        }
+
         if (array_key_exists($date, $this->other))
         {
             return $this->other[$date];
