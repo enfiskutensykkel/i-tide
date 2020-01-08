@@ -62,7 +62,7 @@ final class Hours
             }
         }
 
-        if ($this->isDayBeforeHoliday())
+        if ($this->isDayBeforeHoliday() || $this->today_type == Holidays::NEWYEARS_EVE)
         {
             // Day before holiday
             return (object) array(
