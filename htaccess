@@ -57,6 +57,9 @@ RewriteRule ^(date|hours)/([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})(\.(txt|xml|json))
 RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
 RewriteRule ^(date|hours)(\.(txt|xml|json))?/?$ rest.php?ctrl=hours&type=%1&view=$3&year=0&month=0&day=0&override=today [L,NC,QSA]
 
+RewriteCond %{HTTP:Accept} (application/xml|application/json|text/json|text/xml|text/plain|\*/\*) [NC]
+RewriteRule ^([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})(\.(txt|xml|json))/?$ rest.php?ctrl=hours&type=%1&view=$5&year=$1&month=$2&day=$3 [L,NC,QSA]
+
 # Calendar UI
 #RewriteRule ^(hours|date|month|calendar)/([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})(\.html)?/?$ html.php?view=month&year=$2&month=$3&day=$4 [L,NC,QSA]
 #RewriteRule ^(hours|date|month|calendar)(\.html)?/? html.php?view=month [L,NC,QSA]
