@@ -102,7 +102,7 @@ function lastmonth($datestr, $url)
             td a, td a:hover, td a:link, td a:visited, td a:focus, td a:active { text-decoration: none; color: inherit; display: block;}
         </style>
 
-        <title>Utsalgstider for alkohol</title>
+        <title>Utsalgstider for alkohol i Oslo</title>
         <meta charset="UTF-8">
         <meta name="description" content="En oversikt over utsalgstidene for alkohol">
         <meta name="author" content="Jonas Markussen">
@@ -112,7 +112,7 @@ function lastmonth($datestr, $url)
     <body>
         <div class="container-fluid">
             <div class="page-header">
-                <h1>iTiDE <small>Utsalgstider for alkohol</small></h1>
+                <h1>iTiDE <small>Utsalgstider for alkohol i Oslo</small></h1>
             </div>
 
             <div id="alert-area">
